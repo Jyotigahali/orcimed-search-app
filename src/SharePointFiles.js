@@ -1,14 +1,9 @@
 // SharePointFiles.js
 import React, { useEffect, useState } from 'react';
 import { PublicClientApplication } from '@azure/msal-browser';
-
-const msalConfig = {
-    auth: {
-        clientId: "8c7977b4-d4ff-4561-b53b-e9ca0e3f81a5", 
-        authority: "https://login.microsoftonline.com/b628a32b-cfe7-4127-9019-c80574af0265",
-        redirectUri: "http://localhost:3000", 
-    }
-};
+import { loginRequest, msalConfig } from './authConfigFile';
+import { MsalProvider, useMsal } from '@azure/msal-react';
+import axios from 'axios';
 
 // Initialize MSAL instance
 const msalInstance = new PublicClientApplication(msalConfig);
@@ -17,16 +12,37 @@ const SharePointFiles = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userName, setUserName] = useState("");
     const [error, setError] = useState(null);
-
+    const {instance, accounts} = useMsal();
+ const apiCall = async (token) => {
+    const apiUrl = `https://graph.microsoft.com/v1.0/sites/e2198835-654d-418c-830f-97303ae5b25e/drives/b!NYgZ4k1ljEGDD5cwOuWyXqagOUfN8KBLhXC8Fj-LnbOYys0eNiKwSYPqabU3psXn/root/children/Product Lists/children`;
+   await axios.get(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+        },
+      }).catch(err => console.error(err)).then((res) => console.log(res)
+      );
+    //   console.log(response);
+ }
     const login = async () => {
         try {
-            await msalInstance.initialize(); // Ensure the MSAL instance is initialized
-            const loginResponse = await msalInstance.loginPopup({
-                scopes: ["User.Read", "Files.Read.All"] // Scopes that your app will request
-            });
+            // const siteUrl = 'https://orcimedlifesciences.sharepoint.com/sites/MedTrackProject';
+           
+            await msalInstance.initialize()
+            //await msalInstance.initialize(); // Ensure the MSAL instance is initialized
+            const accessTokenRequest = {
+                scopes: ["user.read"],
+                account: accounts[0],
+              };
+            await instance.loginPopup()
+            .catch((err) => console.error(err))
+            .then((res) => console.log(res));
             setIsAuthenticated(true);
-            setUserName(loginResponse.account.username); // Set the user name after successful login
-            console.log("Login successful!", loginResponse);
+           await instance.acquireTokenSilent(accessTokenRequest)
+            .then((res) => apiCall(res.accessToken))
+      
+            setUserName(accounts[0]?.username); // Set the user name after successful login
+            //console.log("Login successful!", loginResponse);
         } catch (err) {
             setError(err.message);
             console.error("Login error: ", err);
@@ -49,6 +65,8 @@ const SharePointFiles = () => {
                 <p>Please log in to access the document library files.</p>
             )}
             {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+         
+            
         </div>
     );
 };
