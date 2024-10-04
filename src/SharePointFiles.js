@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { PublicClientApplication } from '@azure/msal-browser';
 import { loginRequest, msalConfig } from './authConfigFile';
 import { MsalProvider, useMsal } from '@azure/msal-react';
+import HomeScreen from './Homescreen';
 import axios from 'axios';
 
 // Initialize MSAL instance
@@ -10,6 +11,7 @@ const msalInstance = new PublicClientApplication(msalConfig);
 
 const SharePointFiles = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [fileNames, setFileNames] = useState([]);
     const [userName, setUserName] = useState("");
     const [error, setError] = useState(null);
     const {instance, accounts} = useMsal();
@@ -20,9 +22,13 @@ const SharePointFiles = () => {
           Authorization: `Bearer ${token}`,
           Accept: 'application/json',
         },
-      }).catch(err => console.error(err)).then((res) => console.log(res)
+        
+      }).catch(err => console.error(err)).then((res) =>
+        setFileNames(res.data.value.map(file => file.name))
+       // console.log(res.data.value[0].name)
+      
       );
-    //   console.log(response);
+       console.log(fileNames);
  }
     const login = async () => {
         try {
@@ -55,16 +61,13 @@ const SharePointFiles = () => {
 
     return (
         <div>
-            <h2>SharePoint Document Library Files</h2>
+           
             {isAuthenticated ? (
-                <div>
-                    <p>Welcome, {userName}!</p>
-                    {/* Here you will render your SharePoint file list */}
-                </div>
+               <HomeScreen fileNames={fileNames} error={error} />
             ) : (
                 <p>Please log in to access the document library files.</p>
             )}
-            {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+            {/* {error && <p style={{ color: 'red' }}>Error: {error}</p>} */}
          
             
         </div>
