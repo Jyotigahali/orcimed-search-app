@@ -29,3 +29,4 @@ export const loginRequest = {
     "Files.Read.All",  // Permission to read files
   ], // Ensure SharePoint scope is present
 };
+

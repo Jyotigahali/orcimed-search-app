@@ -1,9 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { getFileWorkSheets, getWorkSheetData } from './ServiceFile';
 
-const HomeScreen = ({ fileNames, error }) => {
+const HomeScreen = ({ fileNames, error, files, token }) => {
+    var item = "rohith"
     const [selectedFile, setSelectedFile] = useState(null);
-
+    const [worksheets, setWorkSheets] = useState([]);
+    const [worksheetData, setWorkSheetData] = useState([]);
     // Sample table data to be shown on click of file
     const sampleTableData = [
         { name: 'John Doe', age: 30, job: 'Engineer' },
@@ -12,14 +15,23 @@ const HomeScreen = ({ fileNames, error }) => {
     ];
 
     // Handle file click and prevent sidebar from resizing
-    const handleFileClick = (fileName) => {
-        setSelectedFile(fileName); // Set the selected file when clicked
+    const handleFileClick = (file) => {
+        setSelectedFile(file); // Set the selected file when clicked
+        getFileWorkSheets(file.id, token).catch((err) => console.error(err)
+        ).then((res) => setWorkSheets(res)
+        )
     };
 
-    // Remove ".xlsx" from filenames for display
+        
+    // Remove ".xlsx" from filenames for display   016BREBXLP5IIL4B5E3NH2LSR3Q2NTBAEA
     const cleanFileName = (fileName) => {
         return fileName.replace('.xlsx', '');
     };
+
+    const handleWorkSheetData = (workSheet) => {
+        getWorkSheetData(selectedFile?.id, workSheet, token).catch((err) => console.error(err)
+    ).then((res) =>setWorkSheetData(res))
+    }
 
     return (
         <div style={{ display: 'flex', height: '100vh', fontFamily: 'Arial, sans-serif' }}>
@@ -34,10 +46,10 @@ const HomeScreen = ({ fileNames, error }) => {
             }}>
                 <h2 style={{ color: '#ffc107' }}>Orcimed</h2> {/* Company name */}
                 <h4 style={{ borderBottom: '2px solid #ffc107', paddingBottom: '10px' }}>Files List</h4>
-                {fileNames.length > 0 ? (
+                {files.length > 0 ? (
                     <ul style={{ listStyleType: 'none', padding: 0 }}>
-                        {fileNames.map((fileName, index) => (
-                            <li key={index} onClick={() => handleFileClick(fileName)} 
+                        {files.map((file, index) => (
+                            <li key={index} onClick={() => handleFileClick(file)} 
                                 style={{
                                     padding: '10px 0',
                                     borderBottom: '1px solid #e9ecef',
@@ -45,7 +57,7 @@ const HomeScreen = ({ fileNames, error }) => {
                                     color: '#ffc107'
                                 }}
                             >
-                                {index + 1}. {cleanFileName(fileName)} {/* Removed .xlsx */}
+                                {index + 1}. {cleanFileName(file.name)} {/* Removed .xlsx */}
                             </li>
                         ))}
                     </ul>
@@ -58,9 +70,9 @@ const HomeScreen = ({ fileNames, error }) => {
             {/* Main Content */}
             <main style={{ flexGrow: 1, padding: '20px' }}>
                 <h2 style={{ color: '#343a40' }}>Welcome to the Home Screen</h2>
-                {selectedFile ? (
+                {selectedFile?.name ? (
                     <div>
-                        <h4 style={{ color: '#343a40', margin:"10px" }}>Selected File: {cleanFileName(selectedFile)}</h4> 
+                        <h4 style={{ color: '#343a40', margin:"10px" }}>Selected File: {cleanFileName(selectedFile?.name)}</h4> 
                         {/* Sample table for demonstration */}
                         <table style={{
                             width: '100%',
@@ -114,6 +126,13 @@ const HomeScreen = ({ fileNames, error }) => {
                     <p>Select a file from the sidebar to view more details.</p>
                 )}
             </main>
+            <ul dir='horizontal'>
+                {worksheets.length > 0 ? worksheets.map((worksheet, index) =>(
+                    <li key={index} onClick={() => handleWorkSheetData(worksheet.name)}>
+                        {worksheet.name}
+                    </li>
+                )) : null}
+            </ul>
         </div>
     );
 };
