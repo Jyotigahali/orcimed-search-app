@@ -2,9 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { PublicClientApplication } from '@azure/msal-browser';
 import { loginRequest, msalConfig } from './authConfigFile';
-import { MsalProvider, useMsal } from '@azure/msal-react';
+import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from '@azure/msal-react';
 import HomeScreen from './Homescreen';
 import axios from 'axios';
+import { getFiles } from './ServiceFile';
 
 // Initialize MSAL instance
 const msalInstance = new PublicClientApplication(msalConfig);
@@ -12,28 +13,19 @@ const msalInstance = new PublicClientApplication(msalConfig);
 const SharePointFiles = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [fileNames, setFileNames] = useState([]);
+    const [files, setFiles] = useState([])
     const [userName, setUserName] = useState("");
     const [error, setError] = useState(null);
+    const [accessToken, setAccessToken] = useState();
     const {instance, accounts} = useMsal();
  const apiCall = async (token) => {
-    const apiUrl = `https://graph.microsoft.com/v1.0/sites/e2198835-654d-418c-830f-97303ae5b25e/drives/b!NYgZ4k1ljEGDD5cwOuWyXqagOUfN8KBLhXC8Fj-LnbOYys0eNiKwSYPqabU3psXn/root/children/Product Lists/children`;
-   await axios.get(apiUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
-        },
-        
-      }).catch(err => console.error(err)).then((res) =>
-        setFileNames(res.data.value.map(file => file.name))
-       // console.log(res.data.value[0].name)
-      
-      );
-       console.log(fileNames);
+    await getFiles(token).catch(err => console.error(err)).then((res) =>{
+        setFileNames(res.data.value.map(file => file.name));
+        setFiles(res.data.value.map(file => file))
+    });
  }
     const login = async () => {
-        try {
-            // const siteUrl = 'https://orcimedlifesciences.sharepoint.com/sites/MedTrackProject';
-           
+        try {           
             await msalInstance.initialize()
             //await msalInstance.initialize(); // Ensure the MSAL instance is initialized
             const accessTokenRequest = {
@@ -42,10 +34,10 @@ const SharePointFiles = () => {
               };
             await instance.loginPopup()
             .catch((err) => console.error(err))
-            .then((res) => console.log(res));
-            setIsAuthenticated(true);
+           
            await instance.acquireTokenSilent(accessTokenRequest)
-            .then((res) => apiCall(res.accessToken))
+            .then((res) => {apiCall(res.accessToken);setAccessToken(res.accessToken)});
+            setIsAuthenticated(true);
       
             setUserName(accounts[0]?.username); // Set the user name after successful login
             //console.log("Login successful!", loginResponse);
@@ -61,14 +53,13 @@ const SharePointFiles = () => {
 
     return (
         <div>
-           
-            {isAuthenticated ? (
-               <HomeScreen fileNames={fileNames} error={error} />
-            ) : (
-                <p>Please log in to access the document library files.</p>
-            )}
-            {/* {error && <p style={{ color: 'red' }}>Error: {error}</p>} */}
-         
+            <AuthenticatedTemplate>
+            <HomeScreen fileNames={fileNames} error={error} files={files} token={accessToken} />
+            </AuthenticatedTemplate>
+            <UnauthenticatedTemplate >
+                {/* {login()} */}
+            <p>Please log in to access the document library files.</p> <button onClick={login} >Login</button>
+            </UnauthenticatedTemplate>      
             
         </div>
     );
