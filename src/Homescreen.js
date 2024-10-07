@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getFileWorkSheets, getWorkSheetData } from './ServiceFile';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Bootstrap import
 import ReactPaginate from 'react-paginate'; // Pagination library
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'; // For Tooltip
 
-const HomeScreen = ({ error, files, token }) => {
+const HomeScreen = ({ error, files, token, searcheItem }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [worksheets, setWorkSheets] = useState([]);
     const [worksheetData, setWorkSheetData] = useState([]);
@@ -28,7 +28,7 @@ const HomeScreen = ({ error, files, token }) => {
     const handleWorkSheetData = (workSheet) => {
         setSelectedWorksheet(workSheet); // Set the selected worksheet
         getWorkSheetData(selectedFile?.id, workSheet, token)
-            .then((res) => setWorkSheetData(res))
+            .then((res) => setWorkSheetData(res.filter(row => row.some(num => num.toString().includes(searcheItem)))))
             .catch((err) => console.error(err));
     };
 
