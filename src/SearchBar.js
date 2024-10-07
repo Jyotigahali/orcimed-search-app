@@ -9,7 +9,6 @@ const SearchBar = ({setSearcheItem, apiCall}) => {
   }
   const handleSearch = () => {
     setSearcheItem(searchedValue);
-    // apiCall()
   }
   return (
     <div>

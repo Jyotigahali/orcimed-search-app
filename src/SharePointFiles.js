@@ -1,10 +1,9 @@
 // SharePointFiles.js
 import React, { useEffect, useState } from 'react';
 import { PublicClientApplication } from '@azure/msal-browser';
-import { loginRequest, msalConfig } from './authConfigFile';
+import { msalConfig } from './authConfigFile';
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from '@azure/msal-react';
 import HomeScreen from './Homescreen';
-import axios from 'axios';
 import { getFiles, getSearchedFiles } from './ServiceFile';
 import SearchBar from './SearchBar';
 
@@ -20,17 +19,14 @@ const SharePointFiles = () => {
     const {instance, accounts} = useMsal();
  const apiCall = async (token) => {
     searcheItem ? await getSearchedFiles(token,searcheItem).then((res) =>{
-        // setFileNames(res?.data?.value?.map(file => file.name));
         setFiles(res?.data?.value?.map(file => file))
     }).catch(err => console.error(err)) : await getFiles(token).catch(err => console.error(err)).then((res) =>{
-        // setFileNames(res?.data?.value?.map(file => file.name));
         setFiles(res?.data?.value?.map(file => file))
     });
  }
     const login = async () => {
         try {           
-            await msalInstance.initialize()
-            //await msalInstance.initialize(); // Ensure the MSAL instance is initialized
+            await msalInstance.initialize() // Ensure the MSAL instance is initialized
             const accessTokenRequest = {
                 scopes: ["user.read"],
                 account: accounts[0],
@@ -49,8 +45,6 @@ const SharePointFiles = () => {
     };
 
     useEffect(() => {
-       console.log(accessToken, searcheItem);
-       
         // Trigger the login process when the component is mounted
         searcheItem || accessToken ? apiCall(accessToken) : login()
     }, [searcheItem]);
@@ -63,8 +57,7 @@ const SharePointFiles = () => {
             </AuthenticatedTemplate>
             <UnauthenticatedTemplate >
             <p>Please log in to access the document library files.</p> <button onClick={login} >Login</button>
-            </UnauthenticatedTemplate>      
-            
+            </UnauthenticatedTemplate>
         </div>
     );
 };

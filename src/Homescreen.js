@@ -10,7 +10,7 @@ const HomeScreen = ({ error, files, token }) => {
     const [worksheetData, setWorkSheetData] = useState([]);
     const [selectedWorksheet, setSelectedWorksheet] = useState(''); // New state for the selected worksheet name
     const [currentPage, setCurrentPage] = useState(0); // Pagination state
-    const itemsPerPage = 5; // Items per page for pagination
+    const itemsPerPage = 25; // Items per page for pagination
 
     // Handle file click
     const handleFileClick = (file) => {
@@ -146,7 +146,7 @@ const HomeScreen = ({ error, files, token }) => {
                         {worksheetData.length > 0 ? (
                             <div className="table-responsive" style={{
                                 overflowX: 'auto',  // Horizontal scroll for the table
-                                maxHeight: '400px',  // Vertical scroll for table height
+                                 // Vertical scroll for table height
                                 overflowY: 'auto',
                                 display: 'block'
                             }}>

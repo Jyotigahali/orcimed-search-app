@@ -5,7 +5,6 @@ import { MsalProvider } from '@azure/msal-react';
 import { msalConfig } from './authConfigFile';
 import { PublicClientApplication } from '@azure/msal-browser';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import SearchBar from './SearchBar';
 
 const msalInstance = new PublicClientApplication(msalConfig);
 function App() {
