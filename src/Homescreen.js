@@ -2,8 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { getFileWorkSheets, getWorkSheetData } from './ServiceFile';
 
-const HomeScreen = ({ fileNames, error, files, token }) => {
-    var item = "rohith"
+const HomeScreen = ({ error, files, token }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [worksheets, setWorkSheets] = useState([]);
     const [worksheetData, setWorkSheetData] = useState([]);
@@ -46,7 +45,7 @@ const HomeScreen = ({ fileNames, error, files, token }) => {
             }}>
                 <h2 style={{ color: '#ffc107' }}>Orcimed</h2> {/* Company name */}
                 <h4 style={{ borderBottom: '2px solid #ffc107', paddingBottom: '10px' }}>Files List</h4>
-                {files.length > 0 ? (
+                {files?.length > 0 ? (
                     <ul style={{ listStyleType: 'none', padding: 0 }}>
                         {files.map((file, index) => (
                             <li key={index} onClick={() => handleFileClick(file)} 
