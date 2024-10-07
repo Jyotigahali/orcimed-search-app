@@ -4,13 +4,13 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Bootstrap import
 import ReactPaginate from 'react-paginate'; // Pagination library
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'; // For Tooltip
 
-const HomeScreen = ({ fileNames, error, files, token }) => {
+const HomeScreen = ({ error, files, token }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [worksheets, setWorkSheets] = useState([]);
     const [worksheetData, setWorkSheetData] = useState([]);
     const [selectedWorksheet, setSelectedWorksheet] = useState(''); // New state for the selected worksheet name
     const [currentPage, setCurrentPage] = useState(0); // Pagination state
-    const itemsPerPage = 5; // Items per page for pagination
+    const itemsPerPage = 25; // Items per page for pagination
 
     // Handle file click
     const handleFileClick = (file) => {
@@ -79,7 +79,7 @@ const HomeScreen = ({ fileNames, error, files, token }) => {
             }}>
                 <h2 style={{ color: '#ffc107' }}>Orcimed</h2> {/* Company name */}
                 <h4 style={{ borderBottom: '2px solid #ffc107', paddingBottom: '10px' }}>Files List</h4>
-                {files.length > 0 ? (
+                {files?.length > 0 ? (
                     <ul style={{ listStyleType: 'none', padding: 0 }}>
                         {files.map((file, index) => (
                             <li key={index} onClick={() => handleFileClick(file)}
@@ -146,7 +146,7 @@ const HomeScreen = ({ fileNames, error, files, token }) => {
                         {worksheetData.length > 0 ? (
                             <div className="table-responsive" style={{
                                 overflowX: 'auto',  // Horizontal scroll for the table
-                                maxHeight: '400px',  // Vertical scroll for table height
+                                 // Vertical scroll for table height
                                 overflowY: 'auto',
                                 display: 'block'
                             }}>

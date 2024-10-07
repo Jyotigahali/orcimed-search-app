@@ -10,7 +10,7 @@ const apiEndPoint = `https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${d
 
 export const getFiles = async (token) => {
   let respone = []
- await axios.get(`${apiEndPoint}//root/children/Product Lists/children`, {
+ await axios.get(`${apiEndPoint}/root/children/Product Lists/children`, {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/json',
@@ -44,4 +44,18 @@ export const getWorkSheetData = async (fileId,workSheet,token) => {
  ).catch((err) => console.error(err)
  )
  return response
+ }
+
+ export const getSearchedFiles = async (token,searchQuery) => {
+      const uri =`https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}/root/children/Product Lists/search(q='${encodeURIComponent(searchQuery)}')`
+      let response = []
+  await axios.get(uri,{
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+  }).catch((err) => console.error(err)
+  ).then((res) => response = res
+  )
+  return response
  }

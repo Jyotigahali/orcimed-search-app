@@ -16,7 +16,7 @@ function App() {
             <main>
                 
             <MsalProvider instance={msalInstance}>
-                <SharePointFiles />
+                <SharePointFiles />                
             </MsalProvider>
                 
             </main>

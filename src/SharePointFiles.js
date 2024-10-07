@@ -1,44 +1,41 @@
 // SharePointFiles.js
 import React, { useEffect, useState } from 'react';
 import { PublicClientApplication } from '@azure/msal-browser';
-import { loginRequest, msalConfig } from './authConfigFile';
+import { msalConfig } from './authConfigFile';
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from '@azure/msal-react';
 import HomeScreen from './Homescreen';
-import axios from 'axios';
-import { getFiles } from './ServiceFile';
+import { getFiles, getSearchedFiles } from './ServiceFile';
+import SearchBar from './SearchBar';
 
 // Initialize MSAL instance
 const msalInstance = new PublicClientApplication(msalConfig);
 
 const SharePointFiles = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [fileNames, setFileNames] = useState([]);
+    const [searcheItem, setSearchItem] = useState('');
     const [files, setFiles] = useState([])
     const [userName, setUserName] = useState("");
     const [error, setError] = useState(null);
     const [accessToken, setAccessToken] = useState();
     const {instance, accounts} = useMsal();
  const apiCall = async (token) => {
-    await getFiles(token).catch(err => console.error(err)).then((res) =>{
-        setFileNames(res.data.value.map(file => file.name));
-        setFiles(res.data.value.map(file => file))
+    searcheItem ? await getSearchedFiles(token,searcheItem).then((res) =>{
+        setFiles(res?.data?.value?.map(file => file))
+    }).catch(err => console.error(err)) : await getFiles(token).catch(err => console.error(err)).then((res) =>{
+        setFiles(res?.data?.value?.map(file => file))
     });
  }
     const login = async () => {
         try {           
-            await msalInstance.initialize()
-            //await msalInstance.initialize(); // Ensure the MSAL instance is initialized
+            await msalInstance.initialize() // Ensure the MSAL instance is initialized
             const accessTokenRequest = {
                 scopes: ["user.read"],
                 account: accounts[0],
               };
-            await instance.loginPopup()
+              await instance.loginPopup()
             .catch((err) => console.error(err))
            
            await instance.acquireTokenSilent(accessTokenRequest)
-            .then((res) => {apiCall(res.accessToken);setAccessToken(res.accessToken)});
-            setIsAuthenticated(true);
-      
+            .then((res) => {apiCall(res.accessToken);setAccessToken(res.accessToken);});      
             setUserName(accounts[0]?.username); // Set the user name after successful login
             //console.log("Login successful!", loginResponse);
         } catch (err) {
@@ -48,19 +45,19 @@ const SharePointFiles = () => {
     };
 
     useEffect(() => {
-        login(); // Trigger the login process when the component is mounted
-    }, []);
+        // Trigger the login process when the component is mounted
+        searcheItem || accessToken ? apiCall(accessToken) : login()
+    }, [searcheItem]);
 
     return (
         <div>
-            <AuthenticatedTemplate>
-            <HomeScreen fileNames={fileNames} error={error} files={files} token={accessToken} />
+            <AuthenticatedTemplate>                
+            <SearchBar setSearcheItem={setSearchItem} apiCall={apiCall}/>
+            <HomeScreen error={error} files={files} token={accessToken} />
             </AuthenticatedTemplate>
             <UnauthenticatedTemplate >
-                {/* {login()} */}
             <p>Please log in to access the document library files.</p> <button onClick={login} >Login</button>
-            </UnauthenticatedTemplate>      
-            
+            </UnauthenticatedTemplate>
         </div>
     );
 };
