@@ -53,7 +53,7 @@ const SharePointFiles = () => {
         <div>
             <AuthenticatedTemplate>                
             <SearchBar setSearcheItem={setSearchItem} apiCall={apiCall}/>
-            <HomeScreen error={error} files={files} token={accessToken} />
+            <HomeScreen error={error} files={files} token={accessToken} searcheItem={searcheItem} />
             </AuthenticatedTemplate>
             <UnauthenticatedTemplate >
             <p>Please log in to access the document library files.</p> <button onClick={login} >Login</button>
