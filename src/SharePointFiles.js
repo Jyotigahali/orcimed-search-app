@@ -8,7 +8,7 @@ import { getFiles, getSearchedFiles } from './ServiceFile';
 import SearchBar from './SearchBar';
 
 // Initialize MSAL instance
-const msalInstance = new PublicClientApplication(msalConfig);
+export const msalInstance = new PublicClientApplication(msalConfig);
 
 const SharePointFiles = () => {
     const [searcheItem, setSearchItem] = useState('');
@@ -24,15 +24,15 @@ const SharePointFiles = () => {
         setFiles(res?.data?.value?.map(file => file))
     });
  }
-    const login = async () => {
-        try {           
+    const login = async (event) => {
+        try {
             await msalInstance.initialize() // Ensure the MSAL instance is initialized
             const accessTokenRequest = {
-                scopes: ["user.read"],
+                scopes:["user.read"],
                 account: accounts[0],
               };
-              await instance.loginPopup()
-            .catch((err) => console.error(err))
+            event && await instance.loginPopup()
+             .catch((err) => console.error(err))
            
            await instance.acquireTokenSilent(accessTokenRequest)
             .then((res) => {apiCall(res.accessToken);setAccessToken(res.accessToken);});      
@@ -46,17 +46,18 @@ const SharePointFiles = () => {
 
     useEffect(() => {
         // Trigger the login process when the component is mounted
-        searcheItem || accessToken ? apiCall(accessToken) : login()
+        searcheItem || accessToken ? apiCall(accessToken) : login(null)
     }, [searcheItem]);
 
     return (
         <div>
-            <AuthenticatedTemplate>                
-            <SearchBar setSearcheItem={setSearchItem} apiCall={apiCall}/>
+            <AuthenticatedTemplate>
+            <SearchBar setSearcheItem={setSearchItem} apiCall={apiCall} token={accessToken}/>
             <HomeScreen error={error} files={files} token={accessToken} searcheItem={searcheItem} />
             </AuthenticatedTemplate>
             <UnauthenticatedTemplate >
-            <p>Please log in to access the document library files.</p> <button onClick={login} >Login</button>
+            <p>Please log in to access the document library files.</p>
+            <button onClick={login} >Login</button>
             </UnauthenticatedTemplate>
         </div>
     );

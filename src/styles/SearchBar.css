@@ -1,0 +1,40 @@
+.searchDiv{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: 1%;
+}
+.searchDiv input{
+  width: 20%;
+  height: 40px;
+  margin-right: 2%;
+  border-radius: 10px;
+  font-size: large;
+}
+.searchDiv button{
+  width: 8%;
+  height: 40px;
+  border-radius: 10px;
+  
+  margin-right: 2%;
+}
+/* .searchDiv div{
+  width: 0%;
+} */
+ .close{
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: none;
+  background-color: transparent;
+  font-weight: bolder;
+  font-weight: bolder;
+  font-size: x-large;
+ }
+ .modal{
+  /* width: 500px; */
+  /* text-align: center; */
+  /* display: flex;
+  justify-content: center; */
+ }
