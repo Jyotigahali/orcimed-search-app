@@ -10,16 +10,9 @@ const msalInstance = new PublicClientApplication(msalConfig);
 function App() {
     return (
         <div className="App">
-            <header className="App-header">
-
-            </header>
-            <main>
-                
             <MsalProvider instance={msalInstance}>
                 <SharePointFiles />                
             </MsalProvider>
-                
-            </main>
         </div>
     );
 }

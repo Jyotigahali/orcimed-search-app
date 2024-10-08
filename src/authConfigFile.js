@@ -23,10 +23,9 @@ export const protectedResources = {
 
 export const loginRequest = {
   scopes: [
-    ...protectedResources.apiList.scopes.read,
-    ...protectedResources.apiList.scopes.write,
     "Sites.Read.All",  // Microsoft Graph permissions for sites
-    "Files.Read.All",  // Permission to read files
+    "Files.Read.All",
+    "Files.ReadWrite.All"  // Permission to read & write files
   ], // Ensure SharePoint scope is present
 };
 

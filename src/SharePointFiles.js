@@ -8,7 +8,7 @@ import { getFiles, getSearchedFiles } from './ServiceFile';
 import SearchBar from './SearchBar';
 
 // Initialize MSAL instance
-const msalInstance = new PublicClientApplication(msalConfig);
+export const msalInstance = new PublicClientApplication(msalConfig);
 
 const SharePointFiles = () => {
     const [searcheItem, setSearchItem] = useState('');
@@ -25,14 +25,14 @@ const SharePointFiles = () => {
     });
  }
     const login = async () => {
-        try {           
+        try {
             await msalInstance.initialize() // Ensure the MSAL instance is initialized
             const accessTokenRequest = {
-                scopes: ["user.read"],
+                scopes:["user.read"],
                 account: accounts[0],
               };
-              await instance.loginPopup()
-            .catch((err) => console.error(err))
+            //   await instance.loginPopup()
+            // .catch((err) => console.error(err))
            
            await instance.acquireTokenSilent(accessTokenRequest)
             .then((res) => {apiCall(res.accessToken);setAccessToken(res.accessToken);});      
@@ -51,8 +51,8 @@ const SharePointFiles = () => {
 
     return (
         <div>
-            <AuthenticatedTemplate>                
-            <SearchBar setSearcheItem={setSearchItem} apiCall={apiCall}/>
+            <AuthenticatedTemplate>
+            <SearchBar setSearcheItem={setSearchItem} apiCall={apiCall} token={accessToken}/>
             <HomeScreen error={error} files={files} token={accessToken} searcheItem={searcheItem} />
             </AuthenticatedTemplate>
             <UnauthenticatedTemplate >
