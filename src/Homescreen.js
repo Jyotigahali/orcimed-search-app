@@ -60,7 +60,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
     };
 
     return (
-        <div style={{ display: 'flex', height: '100vh', fontFamily: 'Arial, sans-serif' }}>
+        <div style={{ display: 'flex', fontFamily: 'Arial, sans-serif' }}>
             {/* Sidebar */}
             <Sidebar 
                 files={files} 
