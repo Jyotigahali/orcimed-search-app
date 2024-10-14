@@ -52,28 +52,28 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                 </h5>
             )}
 
-            {filteredData.length > 0 ? (
-                <div className="table-responsive" style={{ overflowX: 'auto', overflowY: 'auto', display: 'block' }}>
-                    <table className="table table-bordered table-striped">
-                        <thead className="thead-dark">
-                            <tr>
-                                <th>SlNo</th>
-                                {columnNames.slice(1).map((colName, colIndex) => (
-                                    <th key={colIndex}>
-                                        {colName}
-                                        <input
-                                            type="text"
-                                            value={filters[`column${colIndex + 1}`]}
-                                            onChange={(e) => handleFilterChange(e, colIndex + 1)}
-                                            placeholder="Filter"
-                                            style={{ width: '100%' }}
-                                        />
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {paginatedData.map((row, rowIndex) => (
+            <div className="table-responsive" style={{ overflowX: 'auto', overflowY: 'auto', display: 'block' }}>
+                <table className="table table-bordered table-striped">
+                    <thead className="thead-dark">
+                        <tr>
+                            <th>SlNo</th>
+                            {columnNames.slice(1).map((colName, colIndex) => (
+                                <th key={colIndex}>
+                                    {colName}
+                                    <input
+                                        type="text"
+                                        value={filters[`column${colIndex + 1}`]}
+                                        onChange={(e) => handleFilterChange(e, colIndex + 1)}
+                                        placeholder="Filter"
+                                        style={{ width: '100%' }}
+                                    />
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredData.length > 0 ? (
+                            paginatedData.map((row, rowIndex) => (
                                 <tr key={rowIndex}>
                                     {/* Render SlNo column */}
                                     <td>{currentPage * itemsPerPage + rowIndex + 1}</td>
@@ -83,39 +83,45 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                                         </td>
                                     ))}
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            ))
+                        ) : (
+                            // Show a message if no matching rows are found
+                            <tr>
+                                <td colSpan={columnNames.length} style={{ textAlign: 'center' }}>
+                                    No matching rows found.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
 
-                    {/* Pagination */}
-                    <ReactPaginate
-                        previousLabel={"Previous"}
-                        nextLabel={"Next"}
-                        breakLabel={"..."}
-                        pageCount={Math.ceil(filteredData.length / itemsPerPage)}
-                        marginPagesDisplayed={2}
-                        pageRangeDisplayed={5}
-                        onPageChange={handlePageClick}
-                        containerClassName={"pagination"}
-                        activeClassName={"active"}
-                        pageClassName={"page-item"}
-                        pageLinkClassName={"page-link"}
-                        previousClassName={"page-item"}
-                        previousLinkClassName={"page-link"}
-                        nextClassName={"page-item"}
-                        nextLinkClassName={"page-link"}
-                        breakClassName={"page-item"}
-                        breakLinkClassName={"page-link"}
-                    />
-                </div>
-            ) : (
-                <p>No data available or no matching results.</p>
+            {/* Pagination */}
+            {filteredData.length > 0 && (
+                <ReactPaginate
+                    previousLabel={"Previous"}
+                    nextLabel={"Next"}
+                    breakLabel={"..."}
+                    pageCount={Math.ceil(filteredData.length / itemsPerPage)}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={5}
+                    onPageChange={handlePageClick}
+                    containerClassName={"pagination"}
+                    activeClassName={"active"}
+                    pageClassName={"page-item"}
+                    pageLinkClassName={"page-link"}
+                    previousClassName={"page-item"}
+                    previousLinkClassName={"page-link"}
+                    nextClassName={"page-item"}
+                    nextLinkClassName={"page-link"}
+                    breakClassName={"page-item"}
+                    breakLinkClassName={"page-link"}
+                />
             )}
         </div>
     );
 };
 
 export default WorksheetTable;
-
 
 
