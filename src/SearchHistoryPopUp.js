@@ -24,7 +24,7 @@ const SearchHistoryPopUp = ({token}) => {
   useEffect(() => {    
     getSearchedHistory(token).catch((err) => console.error(err))
     .then((res) => {
-      const mySearchedData = res.filter(item => item?.createdBy?.user?.email === accounts[0]?.username).sort((a,b) => b?.fields?.id -a?.fields?.id)
+      const mySearchedData = res?.filter(item => item?.createdBy?.user?.email === accounts[0]?.username).sort((a,b) => b?.fields?.id -a?.fields?.id)
       setSearchHistroy(mySearchedData);
     })
 
@@ -50,7 +50,7 @@ const SearchHistoryPopUp = ({token}) => {
     }
   };
 
-  const paginatedData = searchHistroy.slice(
+  const paginatedData = searchHistroy?.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
 );

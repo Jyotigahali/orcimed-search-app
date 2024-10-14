@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
+import { useNavigate } from 'react-router-dom';
 
 const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, currentPage, handlePageClick, renderCell }) => {
+
+    const navigate = useNavigate();
     // Extract column names from the first row of the worksheetData
     const columnNames = worksheetData.length > 0 ? worksheetData[0] : [];
 
@@ -40,6 +43,13 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
         (currentPage + 1) * itemsPerPage
     );
 
+    const handleRowClick = (data,columns) => {
+        // const clonedEvent = row;
+        // console.log(clonedEvent);
+        
+        navigate("/detailedView",{state: {rows : {data}, columns :{columns}}})
+    }
+
     return (
         <div>
             {worksheetData.length > 0 && selectedWorksheet && (
@@ -74,7 +84,7 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                         </thead>
                         <tbody>
                             {paginatedData.map((row, rowIndex) => (
-                                <tr key={rowIndex}>
+                                <tr key={rowIndex} onClick={() => handleRowClick(row,columnNames)} >
                                     {/* Render SlNo column */}
                                     <td>{currentPage * itemsPerPage + rowIndex + 1}</td>
                                     {row.slice(1).map((value, colIndex) => (
