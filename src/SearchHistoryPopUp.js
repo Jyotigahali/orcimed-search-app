@@ -96,7 +96,7 @@ const SearchHistoryPopUp = ({token}) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {paginatedData.map((row, rowIndex) => (
+                    {paginatedData?.map((row, rowIndex) => (
                         <tr key={rowIndex}>
                           <td>{row?.fields?.Title} </td>
                           <td>{compareDates(row?.fields?.Created)} </td>

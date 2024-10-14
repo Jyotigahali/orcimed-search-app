@@ -1,9 +1,10 @@
 .searchDiv{
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-
   margin: 1%;
+  
 }
 .searchDiv input{
   width: 20%;
@@ -16,7 +17,6 @@
   width: 8%;
   height: 40px;
   border-radius: 10px;
-  
   margin-right: 2%;
 }
 /* .searchDiv div{

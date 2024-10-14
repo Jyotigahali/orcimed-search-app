@@ -13,7 +13,6 @@ export const msalInstance = new PublicClientApplication(msalConfig);
 const SharePointFiles = () => {
     const [searcheItem, setSearchItem] = useState('');
     const [files, setFiles] = useState([])
-    const [userName, setUserName] = useState("");
     const [error, setError] = useState(null);
     const [accessToken, setAccessToken] = useState();
     const {instance, accounts} = useMsal();
@@ -27,27 +26,37 @@ const SharePointFiles = () => {
     const login = async (event) => {
         try {
             await msalInstance.initialize() // Ensure the MSAL instance is initialized
+
+            event && await instance.loginPopup()
+            .catch((err) => console.error(err))
+            .then((res) => {console.log(res);
+                apiCall(res?.accessToken);
+                setAccessToken(res?.accessToken);
+                setError("")
+               }); 
+               
             const accessTokenRequest = {
                 scopes:["user.read"],
                 account: accounts[0],
               };
-            event && await instance.loginPopup()
-             .catch((err) => console.error(err))
            
-           await instance.acquireTokenSilent(accessTokenRequest)
-            .then((res) => {apiCall(res.accessToken);setAccessToken(res.accessToken);});      
-            setUserName(accounts[0]?.username); // Set the user name after successful login
-            //console.log("Login successful!", loginResponse);
+           !event && await instance.acquireTokenSilent(accessTokenRequest)
+            .then((res) => {
+                apiCall(res.accessToken);
+                setAccessToken(res.accessToken);
+                setError("");
+            }); 
+
         } catch (err) {
             setError(err.message);
             console.error("Login error: ", err);
         }
     };
 
-    useEffect(() => {
+    useEffect(() => {        
         // Trigger the login process when the component is mounted
         searcheItem || accessToken ? apiCall(accessToken) : login(null)
-    }, [searcheItem]);
+    }, [accessToken, searcheItem]);
 
     return (
         <div>
