@@ -44,9 +44,6 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
     );
 
     const handleRowClick = (data,columns) => {
-        // const clonedEvent = row;
-        // console.log(clonedEvent);
-        
         navigate("/detailedView",{state: {rows : {data}, columns :{columns}}})
     }
 
@@ -84,7 +81,7 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                     <tbody>
                         {filteredData.length > 0 ? (
                             paginatedData.map((row, rowIndex) => (
-                                <tr key={rowIndex}>
+                                <tr key={rowIndex} onClick={() => handleRowClick(row, columnNames)}>
                                     {/* Render SlNo column */}
                                     <td>{currentPage * itemsPerPage + rowIndex + 1}</td>
                                     {row.slice(1).map((value, colIndex) => (

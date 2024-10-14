@@ -5,7 +5,6 @@ import '../styles/RowDetails.css'
 const RowDetails = () => {
   const location = useLocation();
   const history = useNavigate()
-  console.log("location", location.state);
   const {rows,columns} = location.state
   
   return (

@@ -1,4 +1,4 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import { getFileWorkSheets, getWorkSheetData } from './ServiceFile';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'; // For Tooltip
 import WorksheetButtons from './components/WorksheetButtons';
@@ -12,12 +12,12 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
     const [selectedWorksheet, setSelectedWorksheet] = useState(''); // New state for the selected worksheet name
     const [currentPage, setCurrentPage] = useState(0); // Pagination state
     const itemsPerPage = 25; // Items per page for pagination
-
+   
     // Handle file click
     const handleFileClick = (file) => {
         setSelectedFile(file); // Set the selected file
         setSelectedWorksheet(''); // Reset selected worksheet when a new file is selected
-        getFileWorkSheets(file.id, token)
+        getFileWorkSheets(file?.id, token)
             .then((res) => setWorkSheets(res))
             .catch((err) => console.error(err));
     };

@@ -5,7 +5,7 @@ import { MsalProvider } from '@azure/msal-react';
 import { msalConfig } from './authConfigFile';
 import { PublicClientApplication } from '@azure/msal-browser';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import RowDetails from './components/RowDetails';
 
 const msalInstance = new PublicClientApplication(msalConfig);
@@ -19,7 +19,6 @@ function App() {
                     <Route path='detailedView' Component={RowDetails}/>
                     </Routes>
                 </BrowserRouter>
-                {/* <SharePointFiles /> */}
             </MsalProvider>
         </div>
     );
