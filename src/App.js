@@ -17,7 +17,7 @@ function App() {
                 <Routes>
                     <Route path='/'  Component={SharePointFiles}/>
                     <Route path='detailedView' Component={RowDetails}/>
-                    </Routes>
+                </Routes>
                 </BrowserRouter>
             </MsalProvider>
         </div>
