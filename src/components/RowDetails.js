@@ -24,9 +24,9 @@ const RowDetails = () => {
                   </tr>
               </thead>
               <tbody>
-                  {columns.columns.map((name, rowIndex) => (
+                  {columns.columns.map((col, rowIndex) => (
                       <tr key={rowIndex} >
-                        <td>{name}</td>
+                        <td>{col.name}</td>
                         <td>{rows.data[rowIndex] }</td>
                       </tr>
                   ))}
