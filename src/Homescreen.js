@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { getFileWorkSheets, getWorkSheetData } from './ServiceFile';
+import React, { useEffect, useState } from 'react';
+import { getFileWorkSheets, getSheetTables, getTableColumns, getWorkSheetData } from './ServiceFile';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'; // For Tooltip
 import WorksheetButtons from './components/WorksheetButtons';
 import WorksheetTable from './components/WorksheetTable';
@@ -8,6 +8,7 @@ import Sidebar from './components/SideBar';
 const HomeScreen = ({ error, files, token, searcheItem }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [worksheets, setWorkSheets] = useState([]);
+    const [columns, setColumns] = useState([]);
     const [worksheetData, setWorkSheetData] = useState([]);
     const [selectedWorksheet, setSelectedWorksheet] = useState(''); // New state for the selected worksheet name
     const [currentPage, setCurrentPage] = useState(0); // Pagination state
@@ -18,7 +19,8 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
         setSelectedFile(file); // Set the selected file
         setSelectedWorksheet(''); // Reset selected worksheet when a new file is selected
         getFileWorkSheets(file?.id, token)
-            .then((res) => setWorkSheets(res))
+            .then((res) => {setWorkSheets(res);console.log(res);
+            })
             .catch((err) => console.error(err));
     };
 
@@ -27,10 +29,21 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
 
     // Handle worksheet click and fetch its data
     const handleWorkSheetData = (workSheet) => {
-        setSelectedWorksheet(workSheet); // Set the selected worksheet
-        getWorkSheetData(selectedFile?.id, workSheet, token)
-            .then((res) => setWorkSheetData(res.filter(row => row.some(num => num.toString().includes(searcheItem)))))
-            .catch((err) => console.error(err));
+        // console.log(workSheet,selectedFile);
+        setSelectedWorksheet(workSheet?.name); // Set the selected worksheet
+        getSheetTables(selectedFile?.id,token,workSheet?.id)
+        .then((res) => {
+            res.length > 0 ?
+            getTableColumns(selectedFile?.id,token,workSheet?.id, res[0])
+            .then((res) => {setColumns(res);
+            })
+            .catch((err) => console.error(err)) :setColumns([])
+        })
+        .catch((err) => console.error(err));
+
+        getWorkSheetData(selectedFile?.id, workSheet?.name, token)
+        .then((res) => setWorkSheetData(res.filter(row => row.some(num => num.toString().includes(searcheItem)))))
+        .catch((err) => console.error(err));
     };
 
     // Pagination handling
@@ -84,7 +97,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
 
                         {/* Display worksheet buttons */}
                         <WorksheetButtons 
-                            worksheets={worksheets} 
+                            worksheets={worksheets}
                             handleWorkSheetData={handleWorkSheetData}
                         />
 
@@ -94,6 +107,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
                             selectedWorksheet={selectedWorksheet} 
                             itemsPerPage={itemsPerPage}
                             currentPage={currentPage}
+                            columnNames ={columns}
                             handlePageClick={handlePageClick}
                             renderCell={renderCell}
                         />

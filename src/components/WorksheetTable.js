@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { useNavigate } from 'react-router-dom';
 
-const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, currentPage, handlePageClick, renderCell }) => {
+const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, currentPage,columnNames, handlePageClick, renderCell }) => {
 
     const navigate = useNavigate();
     // Extract column names from the first row of the worksheetData
-    const columnNames = worksheetData.length > 0 ? worksheetData[0] : [];
+    // const column = worksheetData.length > 0 ? worksheetData[0] : [];
 
     // Initialize filters for each column (excluding SlNo)
     const [filters, setFilters] = useState(() => {
         const initialFilters = {};
-        columnNames.slice(1).forEach((colName, colIndex) => {
+        columnNames.forEach((colName, colIndex) => {
             initialFilters[`column${colIndex + 1}`] = ''; // Use dynamic filter keys for each column
         });
         return initialFilters;
@@ -27,8 +27,8 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
     };
 
     // Apply the filters only to the specific column data (excluding SlNo column)
-    const filteredData = worksheetData.slice(1).filter((row) => {
-        return row.slice(1).every((cell, colIndex) => {
+    const filteredData = worksheetData.filter((row) => {
+        return row.every((cell, colIndex) => {
             const filterValue = filters[`column${colIndex + 1}`] || '';
             if (filterValue !== '') {
                 return String(row[colIndex + 1] || '').toLowerCase().includes(filterValue.toLowerCase());
@@ -63,14 +63,14 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                 <table className="table table-bordered table-striped">
                     <thead className="thead-dark">
                         <tr>
-                            <th>SlNo</th>
-                            {columnNames.slice(1).map((colName, colIndex) => (
-                                <th key={colIndex}>
-                                    {colName}
+                            {/* <th>SlNo</th> */}
+                            {columnNames?.map((col,colIndex) => (
+                                <th key={col?.id}>
+                                    {col?.name}
                                     <input
                                         type="text"
-                                        value={filters[`column${colIndex + 1}`]}
-                                        onChange={(e) => handleFilterChange(e, colIndex + 1)}
+                                        value={filters[`column${colIndex}`]}
+                                        onChange={(e) => handleFilterChange(e, colIndex)}
                                         placeholder="Filter"
                                         style={{ width: '100%' }}
                                     />
@@ -79,12 +79,12 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredData.length > 0 ? (
+                        {paginatedData.length > 0 ? (
                             paginatedData.map((row, rowIndex) => (
                                 <tr key={rowIndex} onClick={() => handleRowClick(row, columnNames)}>
                                     {/* Render SlNo column */}
-                                    <td>{currentPage * itemsPerPage + rowIndex + 1}</td>
-                                    {row.slice(1).map((value, colIndex) => (
+                                    {/* <td>{currentPage * itemsPerPage + rowIndex + 1}</td> */}
+                                    {row.map((value, colIndex) => (
                                         <td key={colIndex}>
                                             {renderCell(value)}
                                         </td>

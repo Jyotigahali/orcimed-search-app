@@ -35,6 +35,33 @@ export const getFileWorkSheets = async (fileId,token) => {
 return response
 }
 
+export const getSheetTables = async (fileId,token,worksheetId) => {
+  //${table.id}/columns
+  let response = [];
+  await axios.get(`${apiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables`, {
+   headers: {
+     Authorization: `Bearer ${token}`,
+   },
+ }).then((res) => response = res?.data?.value
+ ).catch((err) => console.error(err)
+ )
+ return response
+ }
+
+ export const getTableColumns = async (fileId,token,worksheetId,table) => {
+  let response = [];
+  console.log("table", table);
+  
+  await axios.get(`${apiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables/${table.id}/columns`, {
+   headers: {
+     Authorization: `Bearer ${token}`,
+   },
+ }).then((res) => response = res?.data?.value
+ ).catch((err) => console.error(err)
+ )
+ return response
+ }
+
 export const getWorkSheetData = async (fileId,workSheet,token) => {
   let response = [];
   await axios.get(`${apiEndPoint}/items/${fileId}/workbook/worksheets('${workSheet}')/usedRange`, {
