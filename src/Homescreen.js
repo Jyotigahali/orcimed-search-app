@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getFileWorkSheets, getSheetTables, getTableColumns, getWorkSheetData } from './ServiceFile';
+import { getFileTables, getFileWorkSheets, getTableColumns, getWorkSheetData } from './ServiceFile';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'; // For Tooltip
 import WorksheetButtons from './components/WorksheetButtons';
 import WorksheetTable from './components/WorksheetTable';
@@ -19,7 +19,24 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
         setSelectedFile(file); // Set the selected file
         setSelectedWorksheet(''); // Reset selected worksheet when a new file is selected
         getFileWorkSheets(file?.id, token)
-            .then((res) => {setWorkSheets(res);console.log(res);
+            .then(async(res1) => {
+                if(searcheItem){
+                    const results = await Promise.all(res1.map( async(sheet) => {
+                        let data = []
+                        try{
+                           const res = await getWorkSheetData(file?.id, sheet?.name, token)
+                            data = res.filter(row => row.some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase())))
+                        } catch(err){
+                            console.error(sheet.name, err);
+                        }
+                        return { sheet, matched: data.length > 0 }                 
+                    }
+                )
+            )
+            setWorkSheets(results.filter(result => result.matched).map(result => result.sheet))
+                }else{                    
+                    setWorkSheets(res1)
+                }               
             })
             .catch((err) => console.error(err));
     };
@@ -28,10 +45,9 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
     const cleanFileName = (fileName) => fileName.replace('.xlsx', '');
 
     // Handle worksheet click and fetch its data
-    const handleWorkSheetData = (workSheet) => {
-        // console.log(workSheet,selectedFile);
+    const handleWorkSheetData = (workSheet) => {        
         setSelectedWorksheet(workSheet?.name); // Set the selected worksheet
-        getSheetTables(selectedFile?.id,token,workSheet?.id)
+        getFileTables(selectedFile?.id,token,workSheet?.id)
         .then((res) => {
             res.length > 0 ?
             getTableColumns(selectedFile?.id,token,workSheet?.id, res[0])
@@ -41,8 +57,8 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
         })
         .catch((err) => console.error(err));
 
-        getWorkSheetData(selectedFile?.id, workSheet?.name, token)
-        .then((res) => setWorkSheetData(res.filter(row => row.some(num => num.toString().includes(searcheItem)))))
+        getWorkSheetData(selectedFile?.id, workSheet, token)
+        .then((res) => setWorkSheetData(res.filter(row => row.some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase())))))
         .catch((err) => console.error(err));
     };
 
@@ -50,6 +66,11 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
     };
+
+    // useEffect(() => {
+    //     console.log("worksheets",worksheets);
+        
+    // },[worksheets])
 
     // Truncate long text and show full on hover
     const renderCell = (text) => {

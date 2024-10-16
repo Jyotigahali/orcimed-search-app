@@ -5,8 +5,6 @@ import { useNavigate } from 'react-router-dom';
 const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, currentPage,columnNames, handlePageClick, renderCell }) => {
 
     const navigate = useNavigate();
-    // Extract column names from the first row of the worksheetData
-    // const column = worksheetData.length > 0 ? worksheetData[0] : [];
 
     // Initialize filters for each column (excluding SlNo)
     const [filters, setFilters] = useState(() => {
