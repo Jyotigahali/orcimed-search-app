@@ -28,7 +28,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
                     const results = await Promise.all(res1.map( async(sheet) => {
                         let data = []
                         try{
-                           const res = await getWorkSheetData(file?.id, sheet?.name, token)
+                           const res = await getWorkSheetData(file?.id, sheet, token)
                             data = res.filter(row => row.some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase())))
                         } catch(err){
                             console.error(sheet.name, err);
@@ -37,6 +37,8 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
                     }
                 )
             )
+            console.log(results.filter(result => result.matched).map(result => result.sheet));
+            
             setWorkSheets(results.filter(result => result.matched).map(result => result.sheet))
                 }else{                    
                     setWorkSheets(res1)
