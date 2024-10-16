@@ -2,12 +2,15 @@ import axios from "axios";
 
 const siteId = 'e2198835-654d-418c-830f-97303ae5b25e';
 const driveId = 'b!NYgZ4k1ljEGDD5cwOuWyXqagOUfN8KBLhXC8Fj-LnbOYys0eNiKwSYPqabU3psXn'
+const operationsSiteid = "7dca5ef6-2a5c-40b1-84da-d9a058b9e3be";
 const apiEndPoint = `https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}`;
 const listId = '561aa2d2-ede2-4b77-8d22-2664661ec3bf'
+//b!9l7KfVwqsUCE2tmgWLnjvv-4fSVEQ11BvVZ-50CAnLW4c1-xvA_9QIHaZXs1xNuL --saftey operations
 // const apiEndPoint = `${apiUrl}/root/children/Product Lists/children`;
 // const fileWorkSheetsApi = `${apiUrl}/items/016BREBXLP5IIL4B5E3NH2LSR3Q2NTBAEA/workbook/worksheets`
 // const siteUrl = 'https://orcimedlifesciences.sharepoint.com/sites/MedTrackProject';
 // const WorkSheetDataApi = `${apiUrl}/items/016BREBXLP5IIL4B5E3NH2LSR3Q2NTBAEA/workbook/worksheets('SheetName')/usedRange`;
+const appi = "https://graph.microsoft.com/v1.0/sites/7dca5ef6-2a5c-40b1-84da-d9a058b9e3be/drives/b!9l7KfVwqsUCE2tmgWLnjvv-4fSVEQ11BvVZ-50CAnLW4c1-xvA_9QIHaZXs1xNuL/root:/Cipla/Trackers for reference/children"
 
 export const getFiles = async (token) => {
   let respone = []
@@ -18,7 +21,7 @@ export const getFiles = async (token) => {
       },
     }).catch(err => console.error(err)).then((res) =>{
       respone = res
-  }      
+  }
     );
     return respone;
 };
@@ -35,7 +38,7 @@ export const getFileWorkSheets = async (fileId,token) => {
 return response
 }
 
-export const getSheetTables = async (fileId,token,worksheetId) => {
+export const getFileTables = async (fileId,token,worksheetId) => {
   //${table.id}/columns
   let response = [];
   await axios.get(`${apiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables`, {
@@ -49,9 +52,7 @@ export const getSheetTables = async (fileId,token,worksheetId) => {
  }
 
  export const getTableColumns = async (fileId,token,worksheetId,table) => {
-  let response = [];
-  console.log("table", table);
-  
+  let response = [];  
   await axios.get(`${apiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables/${table.id}/columns`, {
    headers: {
      Authorization: `Bearer ${token}`,
@@ -63,8 +64,9 @@ export const getSheetTables = async (fileId,token,worksheetId) => {
  }
 
 export const getWorkSheetData = async (fileId,workSheet,token) => {
+  
   let response = [];
-  await axios.get(`${apiEndPoint}/items/${fileId}/workbook/worksheets('${workSheet}')/usedRange`, {
+  await axios.get(`${apiEndPoint}/items/${fileId}/workbook/worksheets('${workSheet.name}')/usedRange`, {
    headers: {
      Authorization: `Bearer ${token}`,
    },
@@ -124,13 +126,9 @@ export const getWorkSheetData = async (fileId,workSheet,token) => {
  }
 
  export const updateSearchHistroy = async(token, itemId, count) =>{
-  let response = [];
-  console.log(count);
-  
-  const updatedData = {
- 
-      SearchedTermCount: count + 1
- 
+  let response = [];  
+  const updatedData = { 
+      SearchedTermCount: count + 1 
   }
   const url = `https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listId}/items/${itemId}/fields`;
   await axios.patch(url, updatedData,

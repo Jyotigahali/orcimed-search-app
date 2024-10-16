@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getFileWorkSheets, getSheetTables, getTableColumns, getWorkSheetData } from './ServiceFile';
+import { getFileTables, getFileWorkSheets, getTableColumns, getWorkSheetData } from './ServiceFile';
 import { OverlayTrigger, Tooltip, Spinner } from 'react-bootstrap';
 import WorksheetButtons from './components/WorksheetButtons';
 import WorksheetTable from './components/WorksheetTable';
@@ -23,8 +23,26 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
         setSelectedWorksheet(''); // Reset selected worksheet when a new file is selected
         setLoading(true); // Start the loading state for file worksheets
         getFileWorkSheets(file?.id, token)
-            .then((res) => {
-                setWorkSheets(res);
+            .then(async(res1) => {
+                if(searcheItem){
+                    const results = await Promise.all(res1.map( async(sheet) => {
+                        let data = []
+                        try{
+                           const res = await getWorkSheetData(file?.id, sheet, token)
+                            data = res.filter(row => row.some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase())))
+                        } catch(err){
+                            console.error(sheet.name, err);
+                        }
+                        return { sheet, matched: data.length > 0 }                 
+                    }
+                )
+            )
+            console.log(results.filter(result => result.matched).map(result => result.sheet));
+            
+            setWorkSheets(results.filter(result => result.matched).map(result => result.sheet))
+                }else{                    
+                    setWorkSheets(res1)
+                }               
             })
             .catch((err) => console.error(err))
             .finally(() => setLoading(false)); // End the loading state after fetching worksheets
@@ -38,7 +56,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
         setSelectedWorksheet(workSheet?.name); // Set the selected worksheet
         setLoadingWorksheets(true); // Start loading state for fetching worksheet data
 
-        getSheetTables(selectedFile?.id, token, workSheet?.id)
+        getFileTables(selectedFile?.id, token, workSheet?.id)
             .then((res) => {
                 res.length > 0
                     ? getTableColumns(selectedFile?.id, token, workSheet?.id, res[0])
@@ -48,8 +66,8 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
             })
             .catch((err) => console.error(err));
 
-        getWorkSheetData(selectedFile?.id, workSheet?.name, token)
-            .then((res) => setWorkSheetData(res.filter(row => row.some(num => num.toString().includes(searcheItem)))))
+        getWorkSheetData(selectedFile?.id, workSheet, token)
+            .then((res) => setWorkSheetData(res.filter(row => row.some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase())))))
             .catch((err) => console.error(err))
             .finally(() => setLoadingWorksheets(false)); // End loading state after data is fetched
             
@@ -59,6 +77,11 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
     };
+
+    // useEffect(() => {
+    //     console.log("worksheets",worksheets);
+        
+    // },[worksheets])
 
     // Truncate long text and show full on hover
     const renderCell = (text) => {

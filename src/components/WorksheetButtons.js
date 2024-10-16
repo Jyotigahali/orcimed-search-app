@@ -12,7 +12,7 @@ const WorksheetButtons = ({ worksheets, handleWorkSheetData }) => {
                         onClick={() => handleWorkSheetData(worksheet)}
                         className="btn btn-primary m-2"
                     >
-                        {worksheet.name}
+                        {worksheet?.name}
                     </button>
                 ))
             ) : (
