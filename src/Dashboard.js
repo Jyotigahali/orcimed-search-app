@@ -10,7 +10,7 @@ import SearchBar from './SearchBar';
 // Initialize MSAL instance
 export const msalInstance = new PublicClientApplication(msalConfig);
 
-const SharePointFiles = () => {
+const Dashboard = () => {
     const [searcheItem, setSearchItem] = useState('');
     const [files, setFiles] = useState([])
     const [error, setError] = useState(null);
@@ -72,4 +72,4 @@ const SharePointFiles = () => {
     );
 };
 
-export default SharePointFiles;
+export default Dashboard;
