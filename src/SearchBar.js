@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './styles/SearchBar.css'
 import SearchHistoryPopUp from './SearchHistoryPopUp';
 import { getSearchedHistory, postSearchHistroy, updateSearchHistroy } from './ServiceFile';
-import { msalInstance } from './SharePointFiles';
+import { msalInstance } from './Dashboard';
 import { useMsal } from '@azure/msal-react';
 
 const SearchBar = ({setSearcheItem, token}) => {
