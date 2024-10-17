@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getFileTables, getFileWorkSheets, getTableColumns, getWorkSheetData } from './ServiceFile';
 import { OverlayTrigger, Tooltip, Spinner } from 'react-bootstrap';
 import WorksheetButtons from './components/WorksheetButtons';
@@ -19,9 +19,11 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
 
     // Handle file click
     const handleFileClick = (file) => {
+        setLoading(true); // Start the loading state for file worksheets
         setSelectedFile(file); // Set the selected file
         setSelectedWorksheet(''); // Reset selected worksheet when a new file is selected
-        setLoading(true); // Start the loading state for file worksheets
+        setWorkSheetData([]);
+        setColumns([]);
         getFileWorkSheets(file?.id, token)
             .then(async(res1) => {
                 if(searcheItem){
@@ -32,16 +34,16 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
                             data = res.filter(row => row.some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase())))
                         } catch(err){
                             console.error(sheet.name, err);
-                        }
+                        }                        
                         return { sheet, matched: data.length > 0 }                 
                     }
                 )
-            )
-            console.log(results.filter(result => result.matched).map(result => result.sheet));
-            
+            )            
             setWorkSheets(results.filter(result => result.matched).map(result => result.sheet))
+            handleWorkSheetData(results.filter(result => result.matched).map(result => result.sheet)[0], file)
                 }else{                    
-                    setWorkSheets(res1)
+                    setWorkSheets(res1);
+                    handleWorkSheetData(res1[0], file)
                 }               
             })
             .catch((err) => console.error(err))
@@ -52,22 +54,24 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
     const cleanFileName = (fileName) => fileName.replace('.xlsx', '');
 
     // Handle worksheet click and fetch its data
-    const handleWorkSheetData = (workSheet) => {
+    const handleWorkSheetData = async(workSheet, file) => {
         setSelectedWorksheet(workSheet?.name); // Set the selected worksheet
-        setLoadingWorksheets(true); // Start loading state for fetching worksheet data
+        setLoadingWorksheets(true); // Start loading state for fetching worksheet data             
 
-        getFileTables(selectedFile?.id, token, workSheet?.id)
+        await getFileTables(file?.id, token, workSheet?.id)
             .then((res) => {
                 res.length > 0
-                    ? getTableColumns(selectedFile?.id, token, workSheet?.id, res[0])
+                    ? getTableColumns(file?.id, token, workSheet?.id, res[0])
                         .then((res) => setColumns(res))
                         .catch((err) => console.error(err))
                     : setColumns([]);
             })
             .catch((err) => console.error(err));
 
-        getWorkSheetData(selectedFile?.id, workSheet, token)
-            .then((res) => setWorkSheetData(res.filter(row => row.some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase())))))
+        await getWorkSheetData(file?.id, workSheet, token)
+            .then((res) => {
+                setWorkSheetData(res.slice(1).filter(row => row.some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase()))))
+            })
             .catch((err) => console.error(err))
             .finally(() => setLoadingWorksheets(false)); // End loading state after data is fetched
             
@@ -78,10 +82,9 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
         setCurrentPage(selected);
     };
 
-    // useEffect(() => {
-    //     console.log("worksheets",worksheets);
-        
-    // },[worksheets])
+    useEffect(() => {
+        handleFileClick(files[0])        
+    },[files])
 
     // Truncate long text and show full on hover
     const renderCell = (text) => {
@@ -139,6 +142,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
                                 <WorksheetButtons
                                     worksheets={worksheets}
                                     handleWorkSheetData={handleWorkSheetData}
+                                    selectedFile={selectedFile}
                                 />
 
                                 {/* Show loader while fetching worksheet data */}

@@ -5,25 +5,26 @@ const driveId = 'b!NYgZ4k1ljEGDD5cwOuWyXqagOUfN8KBLhXC8Fj-LnbOYys0eNiKwSYPqabU3p
 const operationsSiteid = "7dca5ef6-2a5c-40b1-84da-d9a058b9e3be";
 const apiEndPoint = `https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}`;
 const listId = '561aa2d2-ede2-4b77-8d22-2664661ec3bf'
-//b!9l7KfVwqsUCE2tmgWLnjvv-4fSVEQ11BvVZ-50CAnLW4c1-xvA_9QIHaZXs1xNuL --saftey operations
+const soDriveId = "b!9l7KfVwqsUCE2tmgWLnjvv-4fSVEQ11BvVZ-50CAnLW4c1-xvA_9QIHaZXs1xNuL" // --saftey operations drive id 
 // const apiEndPoint = `${apiUrl}/root/children/Product Lists/children`;
 // const fileWorkSheetsApi = `${apiUrl}/items/016BREBXLP5IIL4B5E3NH2LSR3Q2NTBAEA/workbook/worksheets`
 // const siteUrl = 'https://orcimedlifesciences.sharepoint.com/sites/MedTrackProject';
 // const WorkSheetDataApi = `${apiUrl}/items/016BREBXLP5IIL4B5E3NH2LSR3Q2NTBAEA/workbook/worksheets('SheetName')/usedRange`;
-const appi = "https://graph.microsoft.com/v1.0/sites/7dca5ef6-2a5c-40b1-84da-d9a058b9e3be/drives/b!9l7KfVwqsUCE2tmgWLnjvv-4fSVEQ11BvVZ-50CAnLW4c1-xvA_9QIHaZXs1xNuL/root:/Cipla/Trackers for reference/children"
+const operationsApiEndPoint = `https://graph.microsoft.com/v1.0/sites/${operationsSiteid}/drives/${soDriveId}` // /root:/Cipla/Trackers for reference/children`
 
 export const getFiles = async (token) => {
-  let respone = []
- await axios.get(`${apiEndPoint}/root/children/Product Lists/children`, {
+  let response = []
+  const url =`https://graph.microsoft.com/v1.0/sites/${operationsSiteid}/drives/${soDriveId}/root:/Cipla/Trackers for reference:/children` //
+  await axios.get(`${apiEndPoint}/root:/Product Lists:/children`, {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/json',
       },
     }).catch(err => console.error(err)).then((res) =>{
-      respone = res
+      response = res
   }
     );
-    return respone;
+    return response;
 };
 
 export const getFileWorkSheets = async (fileId,token) => {

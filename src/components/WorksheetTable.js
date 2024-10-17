@@ -92,8 +92,8 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                         ) : (
                             // Show a message if no matching rows are found
                             <tr>
-                                <td colSpan={columnNames.length} style={{ textAlign: 'center' }}>
-                                    No matching rows found.
+                                <td colSpan={columnNames.length} >
+                                    No matching rows found
                                 </td>
                             </tr>
                         )}

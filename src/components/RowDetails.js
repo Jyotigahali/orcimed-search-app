@@ -4,7 +4,7 @@ import '../styles/RowDetails.css'
 
 const RowDetails = () => {
   const location = useLocation();
-  const history = useNavigate()
+  const navigate = useNavigate()
   const {rows,columns} = location.state
   
   return (
@@ -12,7 +12,7 @@ const RowDetails = () => {
       <button 
       type="button"
       className="btn btn-primary" 
-      onClick={() => history('/')} >
+      onClick={() => navigate('/')} >
         Back</button>
       <div style={{display:'flex', justifyContent:'stretch',}} className='rowDeatilsTable'>
       <div className="table-responsive">
