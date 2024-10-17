@@ -18,19 +18,26 @@ const SearchBar = ({setSearcheItem, token}) => {
     setSearcheItem(searchedValue);
     const graphScope = ["Files.ReadWrite.All", "User.Read"];
     let presentData = [];
-    await getSearchedHistory(token).catch((err) => console.error(err)
-    ).then((res) => presentData = res?.find((item) => item?.fields?.Title?.toLowerCase() === searchedValue.toLowerCase() && item?.createdBy?.user?.email === accounts[0]?.username));    
+    await getSearchedHistory(token)
+    .catch((err) => console.error(err))
+    .then((res) => presentData = res?.find((item) => 
+      item?.fields?.Title?.toLowerCase() === searchedValue.toLowerCase() && 
+    item?.createdBy?.user?.email === accounts[0]?.username));    
     try {           
       await msalInstance.initialize()
       const accessTokenRequest = {
           scopes:graphScope,
           account: accounts[0],
-        };     
+        };
      await instance.acquireTokenSilent(accessTokenRequest)
       .then((res) => {        
         presentData ? 
-        updateSearchHistroy(res.accessToken,presentData?.fields?.id, presentData?.fields?.SearchedTermCount).catch((err) => console.error(err)).then((res) => {console.log("updated",res);}): searchedValue &&
-        postSearchHistroy(res.accessToken,searchedValue).catch((err) => console.error(err)).then((res) => {console.log("posted",res);})
+        updateSearchHistroy(res.accessToken,presentData?.fields?.id, presentData?.fields?.SearchedTermCount)
+        .catch((err) => console.error(err))
+        .then((res) => {console.log("updated",res);}): searchedValue &&
+        postSearchHistroy(res.accessToken,searchedValue)
+        .catch((err) => console.error(err))
+        .then((res) => {console.log("posted",res);})
       }); 
     } catch (err) {
       console.error("Login error: ", err);

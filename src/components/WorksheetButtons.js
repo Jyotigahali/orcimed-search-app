@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const WorksheetButtons = ({ worksheets, handleWorkSheetData }) => {
+const WorksheetButtons = ({ worksheets, handleWorkSheetData,selectedFile }) => {
+    const [selectedSheet, setSelectedSheet] = useState(worksheets[0]?.name);
     return (
         <div style={{ marginBottom: '20px' }}>
             <h5>Worksheets:</h5>
@@ -9,8 +10,11 @@ const WorksheetButtons = ({ worksheets, handleWorkSheetData }) => {
                    
                     <button
                         key={index}
-                        onClick={() => handleWorkSheetData(worksheet)}
-                        className="btn btn-primary m-2"
+                        onClick={() => {
+                            setSelectedSheet(worksheet?.name);
+                             handleWorkSheetData(worksheet, selectedFile)}
+                            }
+                        className={worksheet?.name === selectedSheet ? "btn btn-primary m-2" : "btn btn-light m-2"}
                     >
                         {worksheet?.name}
                     </button>
