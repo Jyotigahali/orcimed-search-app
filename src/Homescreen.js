@@ -16,7 +16,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
 
     const [loading, setLoading] = useState(false); // Handles general loading state
     const [loadingWorksheets, setLoadingWorksheets] = useState(false); // Handles worksheet-specific loading state
-
+  
     // Handle file click
     const handleFileClick = (file) => {
         setLoading(true); // Start the loading state for file worksheets
@@ -25,27 +25,37 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
         setWorkSheetData([]);
         setColumns([]);
         getFileWorkSheets(file?.id, token)
-            .then(async(res1) => {
-                if(searcheItem){
-                    const results = await Promise.all(res1.map( async(sheet) => {
-                        let data = []
-                        try{
-                           const res = await getWorkSheetData(file?.id, sheet, token)
-                            data = res.filter(row => row.some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase())))
-                        } catch(err){
-                            console.error(sheet.name, err);
-                        }                        
-                        return { sheet, matched: data.length > 0 }                 
+            .then(async(workSheets) => 
+                {
+                    if(searcheItem){
+                        const results = await Promise.all(workSheets.map( async(sheet) => {
+                            let data = []     
+                                await getFileTables(file?.id, token, sheet?.id)
+                                .then(async(table) => {
+                                    if(table.length > 0){
+                                            try{
+                                        const sheetRows = await getWorkSheetData(file?.id, sheet, token,table[0])
+                                            data = sheetRows.filter(row => row?.values[0].some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase())));
+                                    } catch(error){
+                                        console.error(error);
+                                    }
+                                    }else{
+                                    setColumns([]);
+                                    setWorkSheetData([]);
+                                    }
+                                }).catch((err) => console.error("getFileTables", err))
+                                return { sheet,  matched: data.length > 0}
+                        }
+                    ))
+                   const returnedWorkSheets = results.filter(result => result.matched).map(result => result.sheet);
+                   setWorkSheets(returnedWorkSheets);
+                   handleWorkSheetData(returnedWorkSheets[0],file)
+                    }else{
+                        setWorkSheets(workSheets);
+                        handleWorkSheetData(workSheets[0], file)
                     }
-                )
-            )            
-            setWorkSheets(results.filter(result => result.matched).map(result => result.sheet))
-            handleWorkSheetData(results.filter(result => result.matched).map(result => result.sheet)[0], file)
-                }else{                    
-                    setWorkSheets(res1);
-                    handleWorkSheetData(res1[0], file)
-                }               
-            })
+            }
+        )
             .catch((err) => console.error(err))
             .finally(() => setLoading(false)); // End the loading state after fetching worksheets
     };
@@ -56,25 +66,24 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
     // Handle worksheet click and fetch its data
     const handleWorkSheetData = async(workSheet, file) => {
         setSelectedWorksheet(workSheet?.name); // Set the selected worksheet
-        setLoadingWorksheets(true); // Start loading state for fetching worksheet data             
-
+        setLoadingWorksheets(true); // Start loading state for fetching worksheet data
         await getFileTables(file?.id, token, workSheet?.id)
-            .then((res) => {
-                res.length > 0
-                    ? getTableColumns(file?.id, token, workSheet?.id, res[0])
-                        .then((res) => setColumns(res))
-                        .catch((err) => console.error(err))
-                    : setColumns([]);
-            })
-            .catch((err) => console.error(err));
-
-        await getWorkSheetData(file?.id, workSheet, token)
-            .then((res) => {
-                setWorkSheetData(res.slice(1).filter(row => row.some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase()))))
-            })
-            .catch((err) => console.error(err))
-            .finally(() => setLoadingWorksheets(false)); // End loading state after data is fetched
-            
+        .then(async(table) => {
+            if (table.length > 0) {
+                await getTableColumns(file?.id, token, workSheet?.id, table[0])
+                .then((columns) => setColumns(columns))
+                .catch((err) => console.error("getColumns",err))
+                await getWorkSheetData(file?.id, workSheet, token, table[0])
+                .then((tableRows) => searcheItem ? 
+                setWorkSheetData(tableRows.filter(row => row?.values[0].some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase())))) 
+                : setWorkSheetData(tableRows))
+                .catch((err) => console.error("getWorkSheetData",err))
+            }else{
+                setColumns([]);
+                setWorkSheetData([])
+            }
+        }).catch((err) => console.error("getTableError",err))
+        .finally(() => setLoadingWorksheets(false));
     };
 
     // Pagination handling
@@ -83,7 +92,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
     };
 
     useEffect(() => {
-        handleFileClick(files[0])        
+        handleFileClick(files[0])
     },[files])
 
     // Truncate long text and show full on hover
