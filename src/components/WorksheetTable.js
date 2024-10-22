@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { useNavigate } from 'react-router-dom';
+import ExcelJS from 'exceljs';
 
 const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, currentPage,columnNames, handlePageClick, renderCell }) => {
+// console.log(worksheetData);
 
     const navigate = useNavigate();
 
@@ -26,10 +28,10 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
 
     // Apply the filters only to the specific column data (excluding SlNo column)
     const filteredData = worksheetData.filter((row) => {
-        return row.every((cell, colIndex) => {
+        return row?.values[0].every((cell, colIndex) => {
             const filterValue = filters[`column${colIndex + 1}`] || '';
             if (filterValue !== '') {
-                return String(row[colIndex + 1] || '').toLowerCase().includes(filterValue.toLowerCase());
+                return String(row?.values[0][colIndex + 1] || '').toLowerCase().includes(filterValue.toLowerCase());
             }
             return true; // If no filter applied to the column, include the row
         });
@@ -40,11 +42,19 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
         currentPage * itemsPerPage,
         (currentPage + 1) * itemsPerPage
     );
+    // console.log(paginatedData);
+    
 
     const handleRowClick = (data,columns) => {
         navigate("/detailedView",{state: {rows : {data}, columns :{columns}}})
     }
-
+    // const shouldStrikeThrough = (value) => {
+    //     // Define your condition here, e.g., strike through negative values
+    //     // console.log(typeof value, value?.font);
+        
+    //     return typeof value === 'number' && value < 0;
+    //   };
+     
     return (
         <div>
             {worksheetData.length > 0 && selectedWorksheet && (
@@ -79,14 +89,21 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                     <tbody>
                         {paginatedData.length > 0 ? (
                             paginatedData.map((row, rowIndex) => (
-                                <tr key={rowIndex} onClick={() => handleRowClick(row, columnNames)}>
+                                <tr key={rowIndex} onClick={() => handleRowClick(row?.values, columnNames)}>
                                     {/* Render SlNo column */}
                                     {/* <td>{currentPage * itemsPerPage + rowIndex + 1}</td> */}
-                                    {row.map((value, colIndex) => (
-                                        <td key={colIndex}>
-                                            {renderCell(value)}
+                                    {row?.values[0].map((i, colIndex) => 
+                                                <td key={colIndex} 
+                                        // style={{
+                                        //     textDecoration: shouldStrikeThrough(value)
+                                        //       ? 'line-through'
+                                        //       : 'none',
+                                        //   }}
+                                          >
+                                           {renderCell(i)}
                                         </td>
-                                    ))}
+                                        
+                                    )}
                                 </tr>
                             ))
                         ) : (

@@ -14,16 +14,14 @@ const operationsApiEndPoint = `https://graph.microsoft.com/v1.0/sites/${operatio
 
 export const getFiles = async (token) => {
   let response = []
-  const url =`https://graph.microsoft.com/v1.0/sites/${operationsSiteid}/drives/${soDriveId}/root:/Cipla/Trackers for reference:/children` //
+  // const url =`https://graph.microsoft.com/v1.0/sites/${operationsSiteid}/drives/${soDriveId}/root:/Cipla/Trackers for reference:/children` //
   await axios.get(`${apiEndPoint}/root:/Product Lists:/children`, {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/json',
       },
-    }).catch(err => console.error(err)).then((res) =>{
-      response = res
-  }
-    );
+    }).catch(err => console.error(err))
+    .then((res) => response = res);
     return response;
 };
 
@@ -33,9 +31,8 @@ export const getFileWorkSheets = async (fileId,token) => {
   headers: {
     Authorization: `Bearer ${token}`,
   },
-}).then((res) => response = res?.data?.value
-).catch((err) => console.error(err)
-)
+}).then((res) => response = res?.data?.value)
+.catch((err) => console.error(err))
 return response
 }
 
@@ -46,9 +43,8 @@ export const getFileTables = async (fileId,token,worksheetId) => {
    headers: {
      Authorization: `Bearer ${token}`,
    },
- }).then((res) => response = res?.data?.value
- ).catch((err) => console.error(err)
- )
+ }).then((res) => response = res?.data?.value)
+ .catch((err) => console.error(err))
  return response
  }
 
@@ -58,22 +54,25 @@ export const getFileTables = async (fileId,token,worksheetId) => {
    headers: {
      Authorization: `Bearer ${token}`,
    },
- }).then((res) => response = res?.data?.value
- ).catch((err) => console.error(err)
- )
+ }).then((res) => response = res?.data?.value)
+ .catch((err) => console.error(err))
  return response
  }
 
-export const getWorkSheetData = async (fileId,workSheet,token) => {
-  
+export const getWorkSheetData = async (fileId,workSheet,token,table) => {
+  // console.log(table);
+  //CH34626
+  //https://graph.microsoft.com/v1.0/sites/e2198835-654d-418c-830f-97303ae5b25e/drives/b!NYgZ4k1ljEGDD5cwOuWyXqagOUfN8KBLhXC8Fj-LnbOYys0eNiKwSYPqabU3psXn/items/016BREBXKRU6QMJKZMZFDJK5VICCA7NOXO/workbook/worksheets/Sheet1
+  //https://graph.microsoft.com/v1.0/sites/e2198835-654d-418c-830f-97303ae5b25e/drive/items/016BREBXKRU6QMJKZMZFDJK5VICCA7NOXO/workbook/tables/Table3/rows
+ const tableUrl = `https://graph.microsoft.com/v1.0/sites/${siteId}/drive/items/${fileId}/workbook/tables/${table?.name}/rows`
+  const sheetUrl = `${apiEndPoint}/items/${fileId}/workbook/worksheets('${workSheet.name}')/usedRange`  
   let response = [];
-  await axios.get(`${apiEndPoint}/items/${fileId}/workbook/worksheets('${workSheet.name}')/usedRange`, {
+  await axios.get(tableUrl, {
    headers: {
      Authorization: `Bearer ${token}`,
    },
- }).then((res) => response = res?.data?.values
- ).catch((err) => console.error(err)
- )
+ }).then((res) => response = res?.data?.value)
+ .catch((err) => console.error(err))
  return response
  }
 
@@ -85,9 +84,9 @@ export const getWorkSheetData = async (fileId,workSheet,token) => {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     },
-  }).catch((err) => console.error(err)
-  ).then((res) => response = res
-  )
+  })
+  .catch((err) => console.error(err))
+  .then((res) => response = res)
   return response
  }
 
@@ -100,9 +99,8 @@ export const getWorkSheetData = async (fileId,workSheet,token) => {
             Authorization: `Bearer ${token}`
         }
     }
-  ).catch((err) => console.error(err)
-  ).then((res) => response = res?.data?.value
-  );
+  ).catch((err) => console.error(err))
+  .then((res) => response = res?.data?.value);
   return response;
  }
 
@@ -121,8 +119,8 @@ export const getWorkSheetData = async (fileId,workSheet,token) => {
            Authorization: `Bearer ${token}`
         }
     }
-  ).catch((err) => console.error(err)
-  ).then((res) => console.log(res));
+  ).catch((err) => console.error(err))
+  .then((res) => console.log(res));
   return response;
  }
 
@@ -138,7 +136,7 @@ export const getWorkSheetData = async (fileId,workSheet,token) => {
             Authorization: `Bearer ${token}`, 
         }
     }
-  ).catch((err) => console.error(err)
-  ).then((res) => console.log(res));
+  ).catch((err) => console.error(err))
+  .then((res) => console.log(res));
   return response;
  }
