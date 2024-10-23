@@ -19,6 +19,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
   
     // Handle file click
     const handleFileClick = (file) => {
+        setCurrentPage(0);
         setLoading(true); // Start the loading state for file worksheets
         setSelectedFile(file); // Set the selected file
         setSelectedWorksheet(''); // Reset selected worksheet when a new file is selected
@@ -65,6 +66,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
 
     // Handle worksheet click and fetch its data
     const handleWorkSheetData = async(workSheet, file) => {
+        setCurrentPage(0);
         setSelectedWorksheet(workSheet?.name); // Set the selected worksheet
         setLoadingWorksheets(true); // Start loading state for fetching worksheet data
         await getFileTables(file?.id, token, workSheet?.id)
@@ -74,9 +76,11 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
                 .then((columns) => setColumns(columns))
                 .catch((err) => console.error("getColumns",err))
                 await getWorkSheetData(file?.id, workSheet, token, table[0])
-                .then((tableRows) => searcheItem ? 
-                setWorkSheetData(tableRows.filter(row => row?.values[0].some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase())))) 
-                : setWorkSheetData(tableRows))
+                .then((tableRows) => {
+                    (searcheItem ? 
+                    setWorkSheetData(tableRows.filter(row => row?.values[0].some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase())))) 
+                    : setWorkSheetData(tableRows));
+                })
                 .catch((err) => console.error("getWorkSheetData",err))
             }else{
                 setColumns([]);
