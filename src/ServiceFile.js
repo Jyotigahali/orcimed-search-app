@@ -1,21 +1,21 @@
 import axios from "axios";
 
-const siteId = 'e2198835-654d-418c-830f-97303ae5b25e';
-const driveId = 'b!NYgZ4k1ljEGDD5cwOuWyXqagOUfN8KBLhXC8Fj-LnbOYys0eNiKwSYPqabU3psXn'
-const operationsSiteid = "7dca5ef6-2a5c-40b1-84da-d9a058b9e3be";
+const siteId = process.env.REACT_APP_IT_SITE_ID 
+const driveId = process.env.REACT_APP_IT_DRIVE_ID 
 const apiEndPoint = `https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}`;
-const listId = '561aa2d2-ede2-4b77-8d22-2664661ec3bf'
-const soDriveId = "b!9l7KfVwqsUCE2tmgWLnjvv-4fSVEQ11BvVZ-50CAnLW4c1-xvA_9QIHaZXs1xNuL" // --saftey operations drive id 
-// const apiEndPoint = `${apiUrl}/root/children/Product Lists/children`;
-// const fileWorkSheetsApi = `${apiUrl}/items/016BREBXLP5IIL4B5E3NH2LSR3Q2NTBAEA/workbook/worksheets`
+const listId = process.env.REACT_APP_IT_HISTORY_LIST_ID
+const operationsSiteid = process.env.REACT_APP_SO_SITE_ID;
+const soDriveId = process.env.REACT_APP_SO_DRIVE_ID // --saftey operations drive id 
+const trackerForReferenceID = process.env.REACT_APP_TRACKER_FOR_REFERENCE_ID
 // const siteUrl = 'https://orcimedlifesciences.sharepoint.com/sites/MedTrackProject';
-// const WorkSheetDataApi = `${apiUrl}/items/016BREBXLP5IIL4B5E3NH2LSR3Q2NTBAEA/workbook/worksheets('SheetName')/usedRange`;
 const operationsApiEndPoint = `https://graph.microsoft.com/v1.0/sites/${operationsSiteid}/drives/${soDriveId}` // /root:/Cipla/Trackers for reference/children`
+const searchHistoryListApi = `https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listId}/items`
 
-export const getFiles = async (token) => {
+export const getFiles = async (token) => {  
   let response = []
-  // const url =`https://graph.microsoft.com/v1.0/sites/${operationsSiteid}/drives/${soDriveId}/root:/Cipla/Trackers for reference:/children` //
-  await axios.get(`${apiEndPoint}/root:/Product Lists:/children`, {
+  // const url =`${operationsApiEndPoint}/root:/Cipla/Trackers for reference:/children` //
+  const url = `${apiEndPoint}/root:/Product Lists:/children`
+  await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/json',
@@ -26,8 +26,10 @@ export const getFiles = async (token) => {
 };
 
 export const getFileWorkSheets = async (fileId,token) => {
- let response = [];
- await axios.get(`${apiEndPoint}/items/${fileId}/workbook/worksheets`, {
+ let response = []; 
+//  const url = `${operationsApiEndPoint}/items/${fileId}/workbook/worksheets`
+ const url = `${apiEndPoint}/items/${fileId}/workbook/worksheets`
+ await axios.get(url, {
   headers: {
     Authorization: `Bearer ${token}`,
   },
@@ -39,18 +41,23 @@ return response
 export const getFileTables = async (fileId,token,worksheetId) => {
   //${table.id}/columns
   let response = [];
-  await axios.get(`${apiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables`, {
+  // const url = `${operationsApiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables`
+  const url = `${apiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables`
+
+  await axios.get(url, {
    headers: {
      Authorization: `Bearer ${token}`,
    },
- }).then((res) => response = res?.data?.value)
+ }).then((res) =>{ response = res?.data?.value })
  .catch((err) => console.error(err))
  return response
  }
 
  export const getTableColumns = async (fileId,token,worksheetId,table) => {
-  let response = [];  
-  await axios.get(`${apiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables/${table.id}/columns`, {
+  let response = [];
+  // const url = `${operationsApiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables/${table.id}/columns`
+  const url = `${apiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables/${table.id}/columns`
+  await axios.get(url, {
    headers: {
      Authorization: `Bearer ${token}`,
    },
@@ -60,14 +67,12 @@ export const getFileTables = async (fileId,token,worksheetId) => {
  }
 
 export const getWorkSheetData = async (fileId,workSheet,token,table) => {
-  // console.log(table);
   //CH34626
-  //https://graph.microsoft.com/v1.0/sites/e2198835-654d-418c-830f-97303ae5b25e/drives/b!NYgZ4k1ljEGDD5cwOuWyXqagOUfN8KBLhXC8Fj-LnbOYys0eNiKwSYPqabU3psXn/items/016BREBXKRU6QMJKZMZFDJK5VICCA7NOXO/workbook/worksheets/Sheet1
-  //https://graph.microsoft.com/v1.0/sites/e2198835-654d-418c-830f-97303ae5b25e/drive/items/016BREBXKRU6QMJKZMZFDJK5VICCA7NOXO/workbook/tables/Table3/rows
- const tableUrl = `https://graph.microsoft.com/v1.0/sites/${siteId}/drive/items/${fileId}/workbook/tables/${table?.name}/rows`
-  const sheetUrl = `${apiEndPoint}/items/${fileId}/workbook/worksheets('${workSheet.name}')/usedRange`  
+  // const url = `${operationsApiEndPoint}/items/${fileId}/workbook/tables/${table?.name}/rows`
+ const url = `https://graph.microsoft.com/v1.0/sites/${siteId}/drive/items/${fileId}/workbook/tables/${table?.name}/rows`
+  // const sheetUrl = `${apiEndPoint}/items/${fileId}/workbook/worksheets('${workSheet.name}')/usedRange`
   let response = [];
-  await axios.get(tableUrl, {
+  await axios.get(url, {
    headers: {
      Authorization: `Bearer ${token}`,
    },
@@ -77,9 +82,10 @@ export const getWorkSheetData = async (fileId,workSheet,token,table) => {
  }
 
  export const getSearchedFiles = async (token,searchQuery) => {
-      const uri =`https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}/root/children/Product Lists/search(q='${encodeURIComponent(searchQuery)}')`
+  // const url =`${operationsApiEndPoint}/items/${trackerForReferenceID}/search(q='${encodeURIComponent(searchQuery)}')`
+  const url =`${apiEndPoint}/root/children/Product Lists/search(q='${encodeURIComponent(searchQuery)}')`
       let response = []
-  await axios.get(uri,{
+  await axios.get(url,{
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
@@ -93,7 +99,7 @@ export const getWorkSheetData = async (fileId,workSheet,token,table) => {
  export const getSearchedHistory = async(token) =>{
   let response = [];
   await axios.get(
-    `https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listId}/items?expand=fields`,
+    `${searchHistoryListApi}?expand=fields`,
     {
         headers: {
             Authorization: `Bearer ${token}`
@@ -112,7 +118,7 @@ export const getWorkSheetData = async (fileId,workSheet,token,table) => {
       SearchedTermCount: 1
     }
   }
-  const url = `https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listId}/items`;
+  const url = searchHistoryListApi;
   await axios.post(url, itemData,
     {
         headers: {
@@ -129,7 +135,7 @@ export const getWorkSheetData = async (fileId,workSheet,token,table) => {
   const updatedData = { 
       SearchedTermCount: count + 1 
   }
-  const url = `https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listId}/items/${itemId}/fields`;
+  const url = `${searchHistoryListApi}/${itemId}/fields`;
   await axios.patch(url, updatedData,
     {
         headers: {

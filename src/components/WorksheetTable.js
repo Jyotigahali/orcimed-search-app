@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { useNavigate } from 'react-router-dom';
-import ExcelJS from 'exceljs';
 
 const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, currentPage,columnNames, handlePageClick, renderCell }) => {
-// console.log(worksheetData);
 
     const navigate = useNavigate();
 
@@ -42,7 +40,6 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
         currentPage * itemsPerPage,
         (currentPage + 1) * itemsPerPage
     );
-    // console.log(paginatedData);
     
 
     const handleRowClick = (data,columns) => {
