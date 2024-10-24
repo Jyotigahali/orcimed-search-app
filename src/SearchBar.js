@@ -16,13 +16,19 @@ const SearchBar = ({setSearcheItem, token}) => {
 
   const handleSearch = async() => {
     setSearcheItem(searchedValue);
+    const today = new Date().toDateString()
     const graphScope = ["Files.ReadWrite.All", "User.Read"];
     let presentData = [];
     await getSearchedHistory(token)
     .catch((err) => console.error(err))
-    .then((res) => presentData = res?.find((item) => 
-      item?.fields?.Title?.toLowerCase() === searchedValue.toLowerCase() && 
-    item?.createdBy?.user?.email === accounts[0]?.username));    
+    .then((res) => 
+      presentData = res?.find((item) => {
+        const createdDate = new Date(item?.fields?.Created);
+        return (
+          item?.fields?.Title?.toLowerCase() === searchedValue.toLowerCase() && 
+          item?.createdBy?.user?.email === accounts[0]?.username && createdDate.toDateString() === today
+        )})
+    );
     try {           
       await msalInstance.initialize()
       const accessTokenRequest = {
