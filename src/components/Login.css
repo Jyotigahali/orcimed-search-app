@@ -1,0 +1,42 @@
+/* Login.css */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full viewport height */
+    background: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), /* Lighter overlay */
+        url('/public/LoginBag3.png') no-repeat center center / cover; /* Background image */
+    color: #fff; /* Text color for contrast */
+    font-family: 'Arial', sans-serif;
+}
+
+.login-caption {
+    font-size: 2.5rem; /* Larger caption size */
+    margin-bottom: 40px;
+    text-align: center;
+    color: #fdfdfd; /* Light color for caption */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); /* Soft shadow */
+    max-width: 80%;
+    line-height: 1.2;
+    font-weight: bold;
+}
+
+.login-button {
+    padding: 15px 30px; /* Increased padding for a larger button */
+    font-size: 1.4rem;
+    background-color: #f76c6c; /* Distinct, non-primary color */
+    color: white;
+    border: none;
+    border-radius: 8px; /* Rounded corners */
+    cursor: pointer;
+    transition: all 0.3s ease; /* Smooth transitions */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+}
+
+.login-button:hover {
+    background-color: #ff4e4e; /* Brighter shade on hover */
+    transform: translateY(-3px); /* Slight lift on hover */
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
+}
