@@ -6,6 +6,7 @@ import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from '@azure/
 import HomeScreen from './Homescreen';
 import { getFiles, getSearchedFiles } from './ServiceFile';
 import SearchBar from './SearchBar';
+import Login from './components/Login';
 
 // Initialize MSAL instance
 export const msalInstance = new PublicClientApplication(msalConfig);
@@ -65,8 +66,7 @@ const Dashboard = () => {
             <HomeScreen error={error} files={files} token={accessToken} searcheItem={searcheItem} />
             </AuthenticatedTemplate>
             <UnauthenticatedTemplate >
-            <p>Please log in to access the document library files.</p>
-            <button onClick={login} >Login</button>
+            <Login onLogin={login}/>
             </UnauthenticatedTemplate>
         </div>
     );

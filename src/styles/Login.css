@@ -4,10 +4,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh; /* Full viewport height */
-    background: 
+    height: 100vh;
+    background:
         linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), /* Lighter overlay */
-        url('/public/LoginBag3.png') no-repeat center center / cover; /* Background image */
+        url('/public/LoginBag1.jpg') no-repeat center center / cover; /* Background image */
     color: #fff; /* Text color for contrast */
     font-family: 'Arial', sans-serif;
 }
