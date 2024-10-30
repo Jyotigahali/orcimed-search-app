@@ -1,6 +1,6 @@
 // Login.js
 import React from 'react';
-import './Login.css'; // For styling
+import '../styles/Login.css'; // For styling
 
 const Login = ({ onLogin }) => {
     return (

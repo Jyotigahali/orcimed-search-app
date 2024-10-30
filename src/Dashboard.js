@@ -6,6 +6,7 @@ import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from '@azure/
 import HomeScreen from './Homescreen';
 import { getFiles, getSearchedFiles } from './ServiceFile';
 import SearchBar from './SearchBar';
+import Login from './components/Login';
 
 // Initialize MSAL instance
 export const msalInstance = new PublicClientApplication(msalConfig);
@@ -18,9 +19,9 @@ const Dashboard = () => {
     const {instance, accounts} = useMsal();
  const apiCall = async (token) => {
     searcheItem ? await getSearchedFiles(token,searcheItem).then((res) =>{
-        setFiles(res?.data?.value?.map(file => file))
+        setFiles(res.filter((file) => !file.file.name.endsWith("pdf")))
     }).catch(err => console.error(err)) : await getFiles(token).catch(err => console.error(err)).then((res) =>{
-        setFiles(res?.data?.value?.map(file => file))
+        setFiles(res.filter((file) => !file.file.name.endsWith("pdf")))
     });
  }
     const login = async (event) => {
@@ -65,8 +66,7 @@ const Dashboard = () => {
             <HomeScreen error={error} files={files} token={accessToken} searcheItem={searcheItem} />
             </AuthenticatedTemplate>
             <UnauthenticatedTemplate >
-            <p>Please log in to access the document library files.</p>
-            <button onClick={login} >Login</button>
+            <Login onLogin={login}/>
             </UnauthenticatedTemplate>
         </div>
     );

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, currentPage,columnNames, handlePageClick, renderCell }) => {
 
     const navigate = useNavigate();
+    
 
     // Initialize filters for each column (excluding SlNo)
     const [filters, setFilters] = useState(() => {
@@ -51,6 +52,9 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
         
     //     return typeof value === 'number' && value < 0;
     //   };
+    const from = currentPage * itemsPerPage + 1;
+    const to = Math.min((currentPage + 1) * itemsPerPage, filteredData?.length);
+    const paginationTotal = `Showing records ${from} to ${to} of ${filteredData?.length}`
      
     return (
         <div>
@@ -113,13 +117,15 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                         )}
                     </tbody>
                 </table>
+                
             </div>
-
+            <div className='d-flex align-items-center justify-content-between mt-2'>
+            {filteredData.length > 0 ? <p>{paginationTotal} </p> : null}
             {/* Pagination */}
-            {filteredData.length > 0 && (
+            {filteredData.length > itemsPerPage && (
                 <ReactPaginate
-                    previousLabel={"Previous"}
-                    nextLabel={"Next"}
+                    previousLabel={"<"}
+                    nextLabel={">"}
                     breakLabel={"..."}
                     pageCount={Math.ceil(filteredData.length / itemsPerPage)}
                     marginPagesDisplayed={2}
@@ -135,8 +141,11 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                     nextLinkClassName={"page-link"}
                     breakClassName={"page-item"}
                     breakLinkClassName={"page-link"}
+                    
                 />
             )}
+            
+            </div>
         </div>
     );
 };

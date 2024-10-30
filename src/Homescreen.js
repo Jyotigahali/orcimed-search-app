@@ -4,6 +4,8 @@ import { OverlayTrigger, Tooltip, Spinner } from 'react-bootstrap';
 import WorksheetButtons from './components/WorksheetButtons';
 import WorksheetTable from './components/WorksheetTable';
 import Sidebar from './components/SideBar';
+import JSZip from 'jszip';
+import * as XLSX from 'xlsx';
 
 const HomeScreen = ({ error, files, token, searcheItem }) => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -28,6 +30,8 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
         getFileWorkSheets(file?.id, token)
             .then(async(workSheets) => 
                 {
+                    
+                    
                     if(searcheItem){
                         const results = await Promise.all(workSheets.map( async(sheet) => {
                             let data = []     
@@ -66,6 +70,32 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
 
     // Handle worksheet click and fetch its data
     const handleWorkSheetData = async(workSheet, file) => {
+        
+        // const reader = new FileReader();
+        // const fileResponse = await fetch(file["@microsoft.graph.downloadUrl"]);
+        // const arrayBuffer = await fileResponse.blob();
+        // const workbook = XLSX.read(new Uint8Array(arrayBuffer),{type:'array'});
+        // const sheetName = workbook.SheetNames[0];
+        // const rowss = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+        // console.log(rowss);
+        
+        // const blob =  workSheet?.blob()
+        // console.log(arrayBuffer);
+        
+        // reader.onload = (file) => {
+        //     console.log(file, file.target.result);
+            
+        //     const data = new Uint8Array(file.target.result);
+        //     const workbook = XLSX.read(data,{type:'array'});
+        // const sheetName = workbook.SheetNames[0];
+        // const rowss = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+        // console.log(rowss);
+        //     rowss.map((item) => {
+        //         Object.entries(item).map((value) => console.log(item?.strikeThrough, value))
+        //     })
+
+        // }
+        // reader.readAsArrayBuffer(arrayBuffer);
         setCurrentPage(0);
         setSelectedWorksheet(workSheet?.name); // Set the selected worksheet
         setLoadingWorksheets(true); // Start loading state for fetching worksheet data
@@ -76,7 +106,20 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
                 .then((columns) => setColumns(columns))
                 .catch((err) => console.error("getColumns",err))
                 await getWorkSheetData(file?.id, workSheet, token, table[0])
-                .then((tableRows) => {
+                .then( async(tableRows) => {
+                    // const blob = await tableRows?.blob()
+                //     const dataR = new Uint8Array(tableRows[0].values[0]);
+                //    console.log(dataR);
+                   
+                    
+                //     const workbook = XLSX.read(dataR,{type:'array'});
+                    
+                //     const sheetName = workbook.SheetNames[0];
+                //     const rowss = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+                    
+                //     console.log(rowss);
+                    // console.log(tableRows[0].values[0]);
+                    
                     (searcheItem ? 
                     setWorkSheetData(tableRows.filter(row => row?.values[0].some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase())))) 
                     : setWorkSheetData(tableRows));
@@ -96,7 +139,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
     };
 
     useEffect(() => {
-        handleFileClick(files[0])
+        handleFileClick(files[0]?.file)
     },[files])
 
     // Truncate long text and show full on hover
@@ -139,7 +182,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
                 marginLeft: '350px',
                 overflowY: 'auto'
             }}>
-                <h2 style={{ color: '#343a40' }}>Welcome to the Home Screen</h2>
+                {/* <h2 style={{ color: '#343a40' }}>Welcome to the Home Screen</h2> */}
                 {selectedFile?.name ? (
                     <div>
                         <h4 style={{ color: '#343a40', margin: "10px" }}>Selected File: {cleanFileName(selectedFile?.name)}</h4>
