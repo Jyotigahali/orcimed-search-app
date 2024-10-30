@@ -19,9 +19,9 @@ const Dashboard = () => {
     const {instance, accounts} = useMsal();
  const apiCall = async (token) => {
     searcheItem ? await getSearchedFiles(token,searcheItem).then((res) =>{
-        setFiles(res?.data?.value?.map(file => file).filter((file) => !file.name.endsWith("pdf")))
+        setFiles(res.filter((file) => !file.file.name.endsWith("pdf")))
     }).catch(err => console.error(err)) : await getFiles(token).catch(err => console.error(err)).then((res) =>{
-        setFiles(res?.data?.value?.map(file => file).filter((file) => !file.name.endsWith("pdf")))
+        setFiles(res.filter((file) => !file.file.name.endsWith("pdf")))
     });
  }
     const login = async (event) => {

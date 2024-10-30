@@ -11,18 +11,37 @@ const trackerForReferenceID = process.env.REACT_APP_TRACKER_FOR_REFERENCE_ID
 const operationsApiEndPoint = `https://graph.microsoft.com/v1.0/sites/${operationsSiteid}/drives/${soDriveId}` // /root:/Cipla/Trackers for reference/children`
 const searchHistoryListApi = `https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listId}/items`
 
-export const getFiles = async (token) => {  
-  let response = []
+export const getFiles = async (token) => {
+  let mappedResponse = []
   // const url =`${operationsApiEndPoint}/root:/Cipla/Trackers for reference:/children` //
   const url = `${apiEndPoint}/root:/Product Lists:/children`
+  const listVersions =`${apiEndPoint}/items` //`https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${driveId}/items`  
   await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: 'application/json',
       },
     }).catch(err => console.error(err))
-    .then((res) => response = res);
-    return response;
+    .then( async(res) => {
+      mappedResponse = await Promise.all(
+        res.data.value.map(async (file) => {
+          let version = 0;
+          try {
+            const response = await axios.get(`${listVersions}/${file.id}/versions`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+              },
+            });
+            version = response.data.value.length;
+          } catch (err) {
+            console.error(err);
+          }
+          return { file: file, version: version };
+        })
+      );
+    });
+    return mappedResponse;
 };
 
 export const getFileWorkSheets = async (fileId,token) => {
@@ -84,7 +103,8 @@ export const getWorkSheetData = async (fileId,workSheet,token,table) => {
  export const getSearchedFiles = async (token,searchQuery) => {
   // const url =`${operationsApiEndPoint}/items/${trackerForReferenceID}/search(q='${encodeURIComponent(searchQuery)}')`
   const url =`${apiEndPoint}/root/children/Product Lists/search(q='${encodeURIComponent(searchQuery)}')`
-      let response = []
+  const listVersions =`${apiEndPoint}/items`
+  let mappedResponse = []
   await axios.get(url,{
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -92,8 +112,26 @@ export const getWorkSheetData = async (fileId,workSheet,token,table) => {
     },
   })
   .catch((err) => console.error(err))
-  .then((res) => response = res)
-  return response
+  .then(async(res) => {
+    mappedResponse = await Promise.all(
+      res.data.value.map(async (file) => {
+        let version = 0;
+        try {
+          const response = await axios.get(`${listVersions}/${file.id}/versions`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: 'application/json',
+            },
+          });
+          version = response.data.value.length;
+        } catch (err) {
+          console.error(err);
+        }
+        return { file: file, version: version };
+      })
+    );
+  })
+  return mappedResponse
  }
 
  export const getSearchedHistory = async(token) =>{
