@@ -1,5 +1,6 @@
 import axios from "axios";
-
+//drove id -  b!sEjLbDorlkayHmlSx3RV_ZHK6J5Rk-xGj3X1rIxMz-132kCpdg3AT5GTR9F73t7l - file id -- 01KAEGLNOIK7KTMEUW7VCLFIWWAXKPQALN -- file name -"name": "Commercialization Status EU_UK_10-07-24.xlsb",
+//sheet id - 00000000-0001-0000-0000-000000000000 // sheet name - Europe Cipla MA , 
 const siteId = process.env.REACT_APP_IT_SITE_ID 
 const driveId = process.env.REACT_APP_IT_DRIVE_ID 
 const apiEndPoint = `https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}`;
@@ -89,7 +90,7 @@ export const getWorkSheetData = async (fileId,workSheet,token,table) => {
   //CH34626
   // const url = `${operationsApiEndPoint}/items/${fileId}/workbook/tables/${table?.name}/rows`
  const url = `https://graph.microsoft.com/v1.0/sites/${siteId}/drive/items/${fileId}/workbook/tables/${table?.name}/rows`
-  // const sheetUrl = `${apiEndPoint}/items/${fileId}/workbook/worksheets('${workSheet.name}')/usedRange`
+  const sheetUrl = `${apiEndPoint}/items/${fileId}/workbook/worksheets('${workSheet.name}')/range(address='A1:D10')`
   let response = [];
   await axios.get(url, {
    headers: {
@@ -97,6 +98,18 @@ export const getWorkSheetData = async (fileId,workSheet,token,table) => {
    },
  }).then((res) => response = res?.data?.value)
  .catch((err) => console.error(err))
+
+//  axios.get(sheetUrl, {
+//   headers: {
+//     Authorization: `Bearer ${token}`,
+//   },
+// }).then((res) =>{ 
+//   console.log(res)
+  
+// }
+// )
+// .catch((err) => console.error(err))
+ 
  return response
  }
 
