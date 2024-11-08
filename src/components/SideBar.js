@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SideBar = ({ files, selectedFile, handleFileClick, cleanFileName, error }) => {
+const SideBar = ({ files, selectedFile, handleFileClick, cleanFileName, error, loadingWorksheets, loading }) => {
     return (
         <nav style={{
             width: '350px',
@@ -17,16 +17,16 @@ const SideBar = ({ files, selectedFile, handleFileClick, cleanFileName, error })
             {files?.length > 0 ? (
                 <ul style={{ listStyleType: 'none', padding: 0 }}>
                     {files.filter((file) => !file.file.name.endsWith("pdf")).map((file, index) => (
-                        <li key={index} onClick={() => handleFileClick(file.file)}
+                        <li key={index} onClick={() => !loadingWorksheets && !loading && handleFileClick(file.file)}
                             style={{
                                 padding: '10px 0',
                                 borderBottom: '1px solid #e9ecef',
-                                cursor: 'pointer',
+                                cursor: !loadingWorksheets && !loading ? 'pointer' : 'default',
                                 color: '#ffffff',
                                 backgroundColor: selectedFile?.id === file?.file.id ? 'rgba(3, 102, 116, 1)' : 'transparent'
                             }}
                         >
-                            {index + 1}. {cleanFileName(file.file.name)} - V{file.version}
+                            {index + 1}. {cleanFileName(file.file.name)} - v{file.version}
                         </li>
                     ))}
                 </ul>

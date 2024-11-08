@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const WorksheetButtons = ({ worksheets, handleWorkSheetData,selectedFile }) => {
-    const [selectedSheet, setSelectedSheet] = useState(worksheets[0]?.name);
-    // console.log(selectedSheet);    
+    const [selectedSheet, setSelectedSheet] = useState("");
+    // console.log(selectedSheet); 
+    useEffect(() => {
+        setSelectedSheet(worksheets[0]?.name)
+    },[worksheets])
     return (
         <div style={{ marginBottom: '20px' }}>
             <h5>Worksheets:</h5>
@@ -13,7 +16,8 @@ const WorksheetButtons = ({ worksheets, handleWorkSheetData,selectedFile }) => {
                         key={index}
                         onClick={() => {
                             setSelectedSheet(worksheet?.name);
-                             handleWorkSheetData(worksheet, selectedFile)}
+                            worksheet?.name !== selectedSheet && handleWorkSheetData(worksheet, selectedFile)
+                            }
                             }
                         className={worksheet?.name === selectedSheet ? "btn btn-primary m-2" : "btn btn-light m-2"}
                     >

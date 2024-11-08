@@ -20,18 +20,16 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
     const [loadingWorksheets, setLoadingWorksheets] = useState(false); // Handles worksheet-specific loading state
   
     // Handle file click
-    const handleFileClick = (file) => {
+    const handleFileClick = async(file) => {
         setCurrentPage(0);
         setLoading(true); // Start the loading state for file worksheets
         setSelectedFile(file); // Set the selected file
         setSelectedWorksheet(''); // Reset selected worksheet when a new file is selected
         setWorkSheetData([]);
         setColumns([]);
-        getFileWorkSheets(file?.id, token)
+        await getFileWorkSheets(file?.id, token)
             .then(async(workSheets) => 
                 {
-                    
-                    
                     if(searcheItem){
                         const results = await Promise.all(workSheets.map( async(sheet) => {
                             let data = []     
@@ -172,6 +170,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
                 handleFileClick={handleFileClick}
                 cleanFileName={cleanFileName}
                 error={error}
+                loadingWorksheets={loadingWorksheets}
                 loading={loading} // Pass the loading state to Sidebar
             />
 
