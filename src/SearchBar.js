@@ -4,6 +4,7 @@ import SearchHistoryPopUp from './SearchHistoryPopUp';
 import { getSearchedHistory, postSearchHistroy, updateSearchHistroy } from './ServiceFile';
 import { msalInstance } from './Dashboard';
 import { useMsal } from '@azure/msal-react';
+import Ocmlslogo from './images/ocmlsLogo.png'
 
 const SearchBar = ({setSearcheItem, token}) => {
 
@@ -52,6 +53,7 @@ const SearchBar = ({setSearcheItem, token}) => {
 
   return (
     <div className='searchDiv'>
+      <img src={Ocmlslogo} alt='ocmlsLogo' />
       <input type='text' onChange={handleSearchChange} />
       <button type="button" className="btn btn-primary" onClick={handleSearch}>Search</button>
       <div>

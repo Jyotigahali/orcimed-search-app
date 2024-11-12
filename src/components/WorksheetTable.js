@@ -74,7 +74,7 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                         <tr>
                             {/* <th>SlNo</th> */}
                             {columnNames?.map((col,colIndex) => (
-                                <th key={col?.id}>
+                                <th key={col?.id} hidden = {col?.name.toLowerCase() === 'strick row'}>
                                     {col?.name}
                                     <input
                                         type="text"
@@ -90,18 +90,22 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                     <tbody>
                         {paginatedData.length > 0 ? (
                             paginatedData.map((row, rowIndex) => (
-                                <tr key={rowIndex} onClick={() => handleRowClick(row?.values, columnNames)}>
+                                <tr key={rowIndex}
+                                // onClick={() => handleRowClick(row?.values, columnNames)}
+                                >
                                     {/* Render SlNo column */}
                                     {/* <td>{currentPage * itemsPerPage + rowIndex + 1}</td> */}
-                                    {row?.values[0].map((i, colIndex) => 
-                                                <td key={colIndex} 
-                                        // style={{
-                                        //     textDecoration: shouldStrikeThrough(value)
-                                        //       ? 'line-through'
-                                        //       : 'none',
-                                        //   }}
+                                    {row?.values[0].map((value, colIndex) => 
+                                                <td key={colIndex}
+                                        style={{
+                                            textDecoration: row.values[0].includes('s')
+                                              ? 'line-through'
+                                              : 'none',
+                                              color : row.values[0].map(item => item.toString().toLowerCase()).includes('s') ? 'red' : 'black'
+                                          }}
+                                          hidden = {colIndex === 1 && columnNames[1]?.name.toLowerCase() === 'strick row'}
                                           >
-                                           {renderCell(i)}
+                                           {renderCell(value)}
                                         </td>
                                         
                                     )}

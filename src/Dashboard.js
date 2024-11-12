@@ -30,7 +30,7 @@ const Dashboard = () => {
 
             event && await instance.loginPopup()
             .catch((err) => console.error(err))
-            .then((res) => {console.log(res);
+            .then((res) => {
                 apiCall(res?.accessToken);
                 setAccessToken(res?.accessToken);
                 setError("")

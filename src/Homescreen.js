@@ -162,7 +162,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
     };
 
     return (
-        <div style={{ display: 'flex', fontFamily: 'Arial, sans-serif' }}>
+        <div style={{ display: 'flex', fontFamily: 'Arial, sans-serif',marginTop:'75px'}}>
             {/* Sidebar */}
             <Sidebar
                 files={files}
@@ -198,6 +198,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
                                     worksheets={worksheets}
                                     handleWorkSheetData={handleWorkSheetData}
                                     selectedFile={selectedFile}
+                                    isLoadingSheetData={loadingWorksheets}
                                 />
 
                                 {/* Show loader while fetching worksheet data */}
