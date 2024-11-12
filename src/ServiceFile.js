@@ -1,6 +1,4 @@
-import axios from "axios";
-//drove id -  b!sEjLbDorlkayHmlSx3RV_ZHK6J5Rk-xGj3X1rIxMz-132kCpdg3AT5GTR9F73t7l - file id -- 01KAEGLNOIK7KTMEUW7VCLFIWWAXKPQALN -- file name -"name": "Commercialization Status EU_UK_10-07-24.xlsb",
-//sheet id - 00000000-0001-0000-0000-000000000000 // sheet name - Europe Cipla MA , 
+import axios from "axios"; 
 const siteId = process.env.REACT_APP_IT_SITE_ID 
 const driveId = process.env.REACT_APP_IT_DRIVE_ID 
 const apiEndPoint = `https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}`;
