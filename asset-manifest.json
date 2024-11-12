@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/orcimed-search-app/static/css/main.ff5f362c.css",
+    "main.js": "/orcimed-search-app/static/js/main.f2547174.js",
+    "static/js/453.96b8e9ad.chunk.js": "/orcimed-search-app/static/js/453.96b8e9ad.chunk.js",
+    "static/media/LoginBag1.jpg": "/orcimed-search-app/static/media/LoginBag1.2e5a6d4b10a593e14949.jpg",
+    "index.html": "/orcimed-search-app/index.html",
+    "main.ff5f362c.css.map": "/orcimed-search-app/static/css/main.ff5f362c.css.map",
+    "main.f2547174.js.map": "/orcimed-search-app/static/js/main.f2547174.js.map",
+    "453.96b8e9ad.chunk.js.map": "/orcimed-search-app/static/js/453.96b8e9ad.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ff5f362c.css",
+    "static/js/main.f2547174.js"
+  ]
+}
