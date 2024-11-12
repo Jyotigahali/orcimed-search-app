@@ -90,26 +90,14 @@ export const getWorkSheetData = async (fileId,workSheet,token,table) => {
   //CH34626
   // const url = `${operationsApiEndPoint}/items/${fileId}/workbook/tables/${table?.name}/rows`
  const url = `https://graph.microsoft.com/v1.0/sites/${siteId}/drive/items/${fileId}/workbook/tables/${table?.name}/rows`
-  const sheetUrl = `${apiEndPoint}/items/${fileId}/workbook/worksheets('${workSheet.name}')/range(address='A1:D10')`
+  // const sheetUrl = `${apiEndPoint}/items/${fileId}/workbook/worksheets('${workSheet.name}')/range(address='A1:D10')`
   let response = [];
   await axios.get(url, {
    headers: {
      Authorization: `Bearer ${token}`,
    },
  }).then((res) => response = res?.data?.value)
- .catch((err) => console.error(err))
-
-//  axios.get(sheetUrl, {
-//   headers: {
-//     Authorization: `Bearer ${token}`,
-//   },
-// }).then((res) =>{ 
-//   console.log(res)
-  
-// }
-// )
-// .catch((err) => console.error(err))
- 
+ .catch((err) => console.error(err)) 
  return response
  }
 
