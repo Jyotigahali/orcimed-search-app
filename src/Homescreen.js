@@ -177,14 +177,14 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
             {/* Main Content */}
             <main style={{
                 flexGrow: 1,
-                padding: '20px',
+                padding: '10px',
                 marginLeft: '350px',
                 overflowY: 'auto'
             }}>
                 {/* <h2 style={{ color: '#343a40' }}>Welcome to the Home Screen</h2> */}
                 {selectedFile?.name ? (
                     <div>
-                        <h4 style={{ color: '#343a40', margin: "10px" }}>Selected File: {cleanFileName(selectedFile?.name)}</h4>
+                        <h4 style={{ color: '#343a40' }}>Selected File: {cleanFileName(selectedFile?.name)}</h4>
 
                         {/* Show loader while fetching worksheets */}
                         {loading ? (
