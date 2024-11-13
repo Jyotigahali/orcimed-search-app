@@ -10,9 +10,8 @@ const SideBar = ({ files, selectedFile, handleFileClick, cleanFileName, error, l
             borderRight: '1px solid #e9ecef',
             overflowY: 'auto',
             position: 'fixed',
-            height: '95vh'
+            height: '95vh',
         }}>
-            {/* <h2 style={{ color: '#ffc107' }}>Orcimed</h2> */}
             <h4 style={{ borderBottom: '2px solid #ffc107', paddingBottom: '10px' }}>Files Count: {files?.filter((file) => !file.file.name.endsWith("pdf")).length} </h4>
             {files?.length > 0 ? (
                 <ul style={{ listStyleType: 'none', padding: 0 }}>

@@ -50,14 +50,32 @@ const SearchBar = ({setSearcheItem, token}) => {
       console.error("Login error: ", err);
     }
   }
+console.log(accounts);
 
   return (
     <div className='searchDiv'>
       <img src={Ocmlslogo} alt='ocmlsLogo' />
+      <div className='searchSec'>
       <input type='text' onChange={handleSearchChange} />
       <button type="button" className="btn btn-primary" onClick={handleSearch}>Search</button>
       <div>
       <SearchHistoryPopUp token={token} />
+      </div>
+      </div>
+      
+      <div className='profileSec bg-primary'>
+        {/* <img src={accounts[0]} alt='profilePic' /> */}
+        {/* <i className="bi bi-person-circle"></i> */}
+        <h6>
+          {accounts[0].name}
+          {/* Jyoti Laxmikanth Ghali */}
+          {/* Naveen E */}
+        </h6>
+        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#e9a719" className="bi bi-person-circle" viewBox="0 0 16 16">
+          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+          <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+        </svg>
+       
       </div>
     </div>
   )
