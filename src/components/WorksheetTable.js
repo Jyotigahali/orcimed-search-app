@@ -91,7 +91,7 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                         {paginatedData.length > 0 ? (
                             paginatedData.map((row, rowIndex) => (
                                 <tr key={rowIndex}
-                                // onClick={() => handleRowClick(row?.values, columnNames)}
+                                onClick={() => handleRowClick(row?.values, columnNames)}
                                 >
                                     {/* Render SlNo column */}
                                     {/* <td>{currentPage * itemsPerPage + rowIndex + 1}</td> */}
