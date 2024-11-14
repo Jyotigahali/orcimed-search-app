@@ -107,7 +107,6 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                                           >
                                            {renderCell(value)}
                                         </td>
-                                        
                                     )}
                                 </tr>
                             ))
