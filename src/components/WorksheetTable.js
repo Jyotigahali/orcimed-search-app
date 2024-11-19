@@ -5,13 +5,12 @@ import { useNavigate } from 'react-router-dom';
 const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, currentPage,columnNames, handlePageClick, renderCell }) => {
 
     const navigate = useNavigate();
-    
 
     // Initialize filters for each column (excluding SlNo)
     const [filters, setFilters] = useState(() => {
         const initialFilters = {};
         columnNames.forEach((colName, colIndex) => {
-            initialFilters[`column${colIndex + 1}`] = ''; // Use dynamic filter keys for each column
+            initialFilters[`column${colIndex}`] = ''; // Use dynamic filter keys for each column
         });
         return initialFilters;
     });
@@ -28,9 +27,9 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
     // Apply the filters only to the specific column data (excluding SlNo column)
     const filteredData = worksheetData.filter((row) => {
         return row?.values[0].every((cell, colIndex) => {
-            const filterValue = filters[`column${colIndex + 1}`] || '';
+            const filterValue = filters[`column${colIndex}`] || '';
             if (filterValue !== '') {
-                return String(row?.values[0][colIndex + 1] || '').toLowerCase().includes(filterValue.toLowerCase());
+                return String(row?.values[0][colIndex] || '').toLowerCase().includes(filterValue.toLowerCase());
             }
             return true; // If no filter applied to the column, include the row
         });
@@ -46,26 +45,16 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
     const handleRowClick = (data,columns) => {
         navigate("/detailedView",{state: {rows : {data}, columns :{columns}}})
     }
-    // const shouldStrikeThrough = (value) => {
-    //     // Define your condition here, e.g., strike through negative values
-    //     // console.log(typeof value, value?.font);
-        
-    //     return typeof value === 'number' && value < 0;
-    //   };
     const from = currentPage * itemsPerPage + 1;
     const to = Math.min((currentPage + 1) * itemsPerPage, filteredData?.length);
     const paginationTotal = `Showing records ${from} to ${to} of ${filteredData?.length}`
      
     return (
-        <div>
+        <div className='workSheetTable'>
             {worksheetData.length > 0 && selectedWorksheet && (
-                <h5 style={{
-                    fontWeight: 'bold',
-                    color: 'rgba(3, 102, 116, 1)',
-                    marginBottom: '10px'
-                }}>
+                <h6>
                     Selected Worksheet: {selectedWorksheet}
-                </h5>
+                </h6>
             )}
 
             <div className="table-responsive" style={{ overflowX: 'auto', overflowY: 'auto', display: 'block' }}>
@@ -80,8 +69,9 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                                         type="text"
                                         value={filters[`column${colIndex}`]}
                                         onChange={(e) => handleFilterChange(e, colIndex)}
-                                        placeholder="Filter"
-                                        style={{ width: '100%' }}
+                                        placeholder={col?.name}
+                                        // className="w-100 fs-6"
+                                        style={{ width: '100%',fontSize:'12px' }}
                                     />
                                 </th>
                             ))}
@@ -93,8 +83,6 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                                 <tr key={rowIndex}
                                 onClick={() => handleRowClick(row?.values, columnNames)}
                                 >
-                                    {/* Render SlNo column */}
-                                    {/* <td>{currentPage * itemsPerPage + rowIndex + 1}</td> */}
                                     {row?.values[0].map((value, colIndex) => 
                                                 <td key={colIndex}
                                         style={{

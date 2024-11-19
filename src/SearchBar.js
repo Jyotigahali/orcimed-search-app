@@ -50,7 +50,6 @@ const SearchBar = ({setSearcheItem, token}) => {
       console.error("Login error: ", err);
     }
   }
-console.log(accounts);
 
   return (
     <div className='searchDiv'>
@@ -58,18 +57,15 @@ console.log(accounts);
       <div className='searchSec'>
       <input type='text' onChange={handleSearchChange} />
       <button type="button" className="btn btn-primary" onClick={handleSearch}>Search</button>
-      <div>
+      <div className='popUp'>
       <SearchHistoryPopUp token={token} />
       </div>
       </div>
-      
       <div className='profileSec bg-primary'>
         {/* <img src={accounts[0]} alt='profilePic' /> */}
         {/* <i className="bi bi-person-circle"></i> */}
         <h6>
           {accounts[0].name}
-          {/* Jyoti Laxmikanth Ghali */}
-          {/* Naveen E */}
         </h6>
         <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#e9a719" className="bi bi-person-circle" viewBox="0 0 16 16">
           <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>

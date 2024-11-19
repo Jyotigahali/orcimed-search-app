@@ -4,8 +4,7 @@ import { OverlayTrigger, Tooltip, Spinner } from 'react-bootstrap';
 import WorksheetButtons from './components/WorksheetButtons';
 import WorksheetTable from './components/WorksheetTable';
 import Sidebar from './components/SideBar';
-import JSZip from 'jszip';
-import * as XLSX from 'xlsx';
+import './styles/HomeScreen.css'
 
 const HomeScreen = ({ error, files, token, searcheItem }) => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -175,21 +174,15 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
             />
 
             {/* Main Content */}
-            <main style={{
-                flexGrow: 1,
-                padding: '10px',
-                marginLeft: '350px',
-                overflowY: 'auto'
-            }}>
+            <main className='homeScreen'>
                 {/* <h2 style={{ color: '#343a40' }}>Welcome to the Home Screen</h2> */}
                 {selectedFile?.name ? (
                     <div>
-                        <h4 style={{ color: '#343a40' }}>Selected File: {cleanFileName(selectedFile?.name)}</h4>
+                        <h4>Selected File: {cleanFileName(selectedFile?.name)}</h4>
 
                         {/* Show loader while fetching worksheets */}
                         {loading ? (
-                            <div style={{ fontSize:"20px", paddingLeft:"10px", fontWeight:'bold', paddingTop:"20px" }}
-                            >
+                            <div className='loading'>
                                 <span>Loading...</span>
                             </div>
                         ) : (
