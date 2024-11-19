@@ -28,6 +28,17 @@ const SearchHistoryPopUp = ({token}) => {
       setSearchHistroy(mySearchedData);
     })
 
+    const handleOutsideClick = (event) => {
+      const modal = document.querySelector(".sideBar");
+      if (modal && modal.contains(event.target)) {
+        setShowModal(false);
+        console.log(modal);
+        
+      }
+    };
+
+    document.addEventListener("click", handleOutsideClick);
+
   },[token, showModal, accounts]);
 
   const compareDates = (date) => {
@@ -68,10 +79,9 @@ const SearchHistoryPopUp = ({token}) => {
 
       {showModal && (
         <div
-          className="modal fade show modal-lg"
+          className="modal fade show modal-m"
           style={{ display: "block" }}
           tabIndex="-1"
-          aria-labelledby="exampleModalLabel"
           aria-hidden="true"
         >
           <div className="modal-dialog" role="document">
@@ -87,6 +97,9 @@ const SearchHistoryPopUp = ({token}) => {
                 </button>
               </div>
               <div className="modal-body">
+                {
+                  searchHistroy?.length > 0 ? 
+                
               <table className="table table-bordered table-striped">
                   <thead className="thead-dark">
                     <tr>
@@ -104,7 +117,7 @@ const SearchHistoryPopUp = ({token}) => {
                         </tr>
                     ))}
                   </tbody>
-              </table>
+              </table> : <h5>Your Search History is empty!</h5>}
               {searchHistroy?.length > itemsPerPage ?
                <ReactPaginate
                         previousLabel={"<"}

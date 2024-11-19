@@ -6,7 +6,7 @@ const WorksheetButtons = ({ worksheets, handleWorkSheetData,selectedFile,isLoadi
         setSelectedSheet(worksheets[0]?.name)
     },[worksheets])
     return (
-        <div style={{ marginBottom: '20px' }}>
+        <div className='workSheetButtons'>
             <h5>Worksheets:</h5>
             {worksheets.length  > 0 ? (
                 worksheets.map((worksheet, index) => (
@@ -18,7 +18,7 @@ const WorksheetButtons = ({ worksheets, handleWorkSheetData,selectedFile,isLoadi
                         worksheet?.name !== selectedSheet && handleWorkSheetData(worksheet, selectedFile)
                         }
                     }
-                    className={worksheet?.name === selectedSheet ? "btn btn-primary m-2" : "btn btn-light m-2"}
+                    className={worksheet?.name === selectedSheet ? "btn btn-primary m-1" : "btn btn-light m-1"}
                     >
                     {worksheet?.name}
                 </button>
