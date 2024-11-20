@@ -48,7 +48,6 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
     const from = currentPage * itemsPerPage + 1;
     const to = Math.min((currentPage + 1) * itemsPerPage, filteredData?.length);
     const paginationTotal = `Showing records ${from} to ${to} of ${filteredData?.length}`
-     
     return (
         <div className='workSheetTable'>
             {worksheetData.length > 0 && selectedWorksheet && (
@@ -63,7 +62,7 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                         <tr>
                             {/* <th>SlNo</th> */}
                             {columnNames?.map((col,colIndex) => (
-                                <th key={col?.id} hidden = {col?.name.toLowerCase() === 'strick row'}>
+                                <th key={col?.id} hidden = {col?.name.toLowerCase() === 'strike row'}>
                                     {col?.name}
                                     <input
                                         type="text"
@@ -91,7 +90,7 @@ const WorksheetTable = ({ worksheetData, selectedWorksheet, itemsPerPage, curren
                                               : 'none',
                                               color : row.values[0].map(item => item.toString().toLowerCase()).includes('s') ? 'red' : 'black'
                                           }}
-                                          hidden = {colIndex === 1 && columnNames[1]?.name.toLowerCase() === 'strick row'}
+                                          hidden = {colIndex === 0 && columnNames[0]?.name.toLowerCase() === 'strike row'}
                                           >
                                            {renderCell(value)}
                                         </td>
