@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/orcimed-search-app/static/css/main.b14f8761.css",
-    "main.js": "/orcimed-search-app/static/js/main.8014d187.js",
+    "main.css": "/orcimed-search-app/static/css/main.6d6ae987.css",
+    "main.js": "/orcimed-search-app/static/js/main.d769187e.js",
     "static/js/453.96b8e9ad.chunk.js": "/orcimed-search-app/static/js/453.96b8e9ad.chunk.js",
     "static/media/LoginBag1.jpg": "/orcimed-search-app/static/media/LoginBag1.2e5a6d4b10a593e14949.jpg",
     "index.html": "/orcimed-search-app/index.html",
-    "main.b14f8761.css.map": "/orcimed-search-app/static/css/main.b14f8761.css.map",
-    "main.8014d187.js.map": "/orcimed-search-app/static/js/main.8014d187.js.map",
+    "main.6d6ae987.css.map": "/orcimed-search-app/static/css/main.6d6ae987.css.map",
+    "main.d769187e.js.map": "/orcimed-search-app/static/js/main.d769187e.js.map",
     "453.96b8e9ad.chunk.js.map": "/orcimed-search-app/static/js/453.96b8e9ad.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.b14f8761.css",
-    "static/js/main.8014d187.js"
+    "static/css/main.6d6ae987.css",
+    "static/js/main.d769187e.js"
   ]
 }
