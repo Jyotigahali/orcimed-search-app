@@ -8,13 +8,13 @@ const RowDetails = () => {
   const {rows,columns} = location.state
   
   return (
-    <div>
+    <div className='detailePage'>
       <button 
       type="button"
       className="btn btn-primary" 
       onClick={() => navigate('/')} >
         Back</button>
-      <div style={{display:'flex', justifyContent:'stretch',}} className='rowDeatilsTable'>
+      <div style={{display:'flex', justifyContent:'stretch'}} className='rowDeatilsTable'>
       <div className="table-responsive">
           <table className="table table-bordered table-striped">
               <thead className="thead-dark">

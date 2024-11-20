@@ -7,7 +7,6 @@
   overflow-y: auto;
   position: fixed;
   height: 94%;
-  /* z-index: -1; */
 }
 .sideBar h4{
   border-bottom: 1px solid #ffc107;
@@ -20,12 +19,30 @@
 }
 @media (-webkit-min-device-pixel-ratio: 1.5) {
   #fileLists{
-    font-size: small;
+    font-size: 12px;
     padding: 7px 0;
   }
   .sideBar{
     width: 23%;
     height: 92%;
-    /* z-index: -1; */
   }
+  .sideBarH{
+    width: 23%;
+    height: 92%;
+  }
+}
+.sideBarH{
+  width: 18%;
+  background-color: rgba(50, 145, 156, 1);
+  padding: 10px 5px;
+  color: #fff;
+  border-right: 1px solid #e9ecef;
+  overflow-y: auto;
+  position: fixed;
+  height: 94%;
+   z-index: -1;
+}
+.sideBarH h4{
+  border-bottom: 1px solid #ffc107;
+  padding-bottom: 5px;
 }

@@ -1,14 +1,14 @@
 import React from 'react';
 import '../styles/Sidebar.css'
 
-const SideBar = ({ files, selectedFile, handleFileClick, cleanFileName, error, loadingWorksheets, loading }) => {
+const SideBar = ({ files, selectedFile, handleFileClick, cleanFileName, error, loadingWorksheets, loading,showModal }) => {
     return (
-        <nav className='sideBar'>
+        <nav className={showModal ?"sideBarH" : 'sideBar'}>
             <h4>Files Count: {files?.filter((file) => !file.file.name.endsWith("pdf")).length} </h4>
             {files?.length > 0 ? (
                 <ul style={{ listStyleType: 'none', padding: 0 }}>
                     {files.filter((file) => !file.file.name.endsWith("pdf")).map((file, index) => (
-                        <li key={index} onClick={() => !loadingWorksheets && !loading && handleFileClick(file.file)}
+                        <li key={index} onClick={() => !loadingWorksheets && !loading && selectedFile.name !== file.file.name && handleFileClick(file.file)}
                            id='fileLists'
                            style={{
                             cursor: !loadingWorksheets && !loading ? 'pointer' : 'default',

@@ -5,7 +5,7 @@ import { getSearchedHistory } from "./ServiceFile";
 import { useMsal } from "@azure/msal-react";
 import ReactPaginate from "react-paginate";
 
-const SearchHistoryPopUp = ({token}) => {
+const SearchHistoryPopUp = ({token, setShowModalH}) => {
   const [showModal, setShowModal] = useState(false);
   const [searchHistroy,setSearchHistroy] = useState([]);
   const [currentPage, setCurrentPage] = useState(0); // Pagination state
@@ -15,6 +15,7 @@ const SearchHistoryPopUp = ({token}) => {
   const toggleModal = () => {
     setCurrentPage(0);
     setShowModal(!showModal);
+    setShowModalH(!showModal)
   };
 
   const handlePageClick = ({ selected }) => {
@@ -24,7 +25,9 @@ const SearchHistoryPopUp = ({token}) => {
   useEffect(() => {    
     getSearchedHistory(token).catch((err) => console.error(err))
     .then((res) => {
-      const mySearchedData = res?.filter(item => item?.createdBy?.user?.email === accounts[0]?.username).sort((a,b) => b?.fields?.id -a?.fields?.id)
+      const mySearchedData = res?.filter(item => 
+        item?.createdBy?.user?.email === accounts[0]?.username)
+        .sort((a,b) => b?.fields?.id -a?.fields?.id)
       setSearchHistroy(mySearchedData);
     })
 
@@ -32,8 +35,7 @@ const SearchHistoryPopUp = ({token}) => {
       const modal = document.querySelector(".sideBar");
       if (modal && modal.contains(event.target)) {
         setShowModal(false);
-        console.log(modal);
-        
+        setShowModalH(false)
       }
     };
 
@@ -67,7 +69,7 @@ const SearchHistoryPopUp = ({token}) => {
 );
 
   return (
-    <div>
+    <div className="historyPopUp">
       <button
         type="button"
         className="btn btn-primary"
@@ -98,8 +100,7 @@ const SearchHistoryPopUp = ({token}) => {
               </div>
               <div className="modal-body">
                 {
-                  searchHistroy?.length > 0 ? 
-                
+                  searchHistroy?.length > 0 ?
               <table className="table table-bordered table-striped">
                   <thead className="thead-dark">
                     <tr>
@@ -137,7 +138,6 @@ const SearchHistoryPopUp = ({token}) => {
                         nextLinkClassName={"page-link"}
                         breakClassName={"page-item"}
                         breakLinkClassName={"page-link"}
-
                     /> : null
               }
               </div>
@@ -156,7 +156,7 @@ const SearchHistoryPopUp = ({token}) => {
           <div
             className="modal-backdrop fade show"
             onClick={toggleModal}
-            style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1040 }}
+            style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1 }}
           />
         </div>
       )}
