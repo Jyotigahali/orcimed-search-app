@@ -6,7 +6,7 @@ import { msalInstance } from './Dashboard';
 import { useMsal } from '@azure/msal-react';
 import Ocmlslogo from './images/ocmlsLogo.png'
 
-const SearchBar = ({setSearcheItem, token}) => {
+const SearchBar = ({setSearcheItem, token, setShowModal}) => {
 
   const [searchedValue, setSearchedValue] = useState('');
   const {instance, accounts} = useMsal();
@@ -58,7 +58,7 @@ const SearchBar = ({setSearcheItem, token}) => {
       <input type='text' onChange={handleSearchChange} />
       <button type="button" className="btn btn-primary" onClick={handleSearch}>Search</button>
       <div className='popUp'>
-      <SearchHistoryPopUp token={token} />
+      <SearchHistoryPopUp token={token} setShowModalH={setShowModal} />
       </div>
       </div>
       <div className='profileSec bg-primary'>

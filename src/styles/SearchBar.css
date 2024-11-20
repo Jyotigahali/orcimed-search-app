@@ -27,7 +27,7 @@
   font-size: large;
 }
 .searchDiv button{
-  width: 8%;
+  width: 70px;
   /* height: 40px; */
   border-radius: 10px;
   margin-right: 2%;
@@ -62,3 +62,8 @@
  .profileSec svg{
   margin-right: 10px;
  }
+ @media (-webkit-min-device-pixel-ratio: 1.5) {
+ .historyPopUp{
+  font-size: 12px;
+ }
+}

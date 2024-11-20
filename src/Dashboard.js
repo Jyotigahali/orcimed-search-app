@@ -12,6 +12,7 @@ import Login from './components/Login';
 export const msalInstance = new PublicClientApplication(msalConfig);
 
 const Dashboard = () => {
+    const [showModal, setShowModal] = useState(false);
     const [searcheItem, setSearchItem] = useState('');
     const [files, setFiles] = useState([])
     const [error, setError] = useState(null);
@@ -62,8 +63,8 @@ const Dashboard = () => {
     return (
         <div>
             <AuthenticatedTemplate>
-            <SearchBar setSearcheItem={setSearchItem} apiCall={apiCall} token={accessToken}/>
-            <HomeScreen error={error} files={files} token={accessToken} searcheItem={searcheItem} />
+            <SearchBar setSearcheItem={setSearchItem} apiCall={apiCall} token={accessToken} setShowModal={setShowModal}/>
+            <HomeScreen error={error} files={files} token={accessToken} searcheItem={searcheItem} showModal={showModal} />
             </AuthenticatedTemplate>
             <UnauthenticatedTemplate >
             <Login onLogin={login}/>

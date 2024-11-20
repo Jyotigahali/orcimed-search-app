@@ -1,10 +1,19 @@
-body{
+.detailePage{
   margin: 10px;
 }
-body button{
-  margin: 0;
-  padding: 0;
+.detailePage .btn{
+  margin: 5px 10px;
+  padding: 5px 10px;
 }
 .rowDeatilsTable{
   margin: 10px 10px;
+}
+@media (-webkit-min-device-pixel-ratio: 1.5) {
+ .rowDeatilsTable{
+  font-size: small;
+ }
+ .detailePage .btn{
+  margin: 0px 10px;
+  padding: 0px 5px;
+}
 }

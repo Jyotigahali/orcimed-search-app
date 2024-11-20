@@ -6,7 +6,7 @@ import WorksheetTable from './components/WorksheetTable';
 import Sidebar from './components/SideBar';
 import './styles/HomeScreen.css'
 
-const HomeScreen = ({ error, files, token, searcheItem }) => {
+const HomeScreen = ({ error, files, token, searcheItem,showModal }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [worksheets, setWorkSheets] = useState([]);
     const [columns, setColumns] = useState([]);
@@ -171,6 +171,7 @@ const HomeScreen = ({ error, files, token, searcheItem }) => {
                 error={error}
                 loadingWorksheets={loadingWorksheets}
                 loading={loading} // Pass the loading state to Sidebar
+                showModal={showModal}
             />
 
             {/* Main Content */}
