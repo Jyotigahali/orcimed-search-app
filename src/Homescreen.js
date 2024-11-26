@@ -13,6 +13,7 @@ const HomeScreen = ({ error, files, token, searcheItem,showModal }) => {
     const [worksheetData, setWorkSheetData] = useState([]);
     const [selectedWorksheet, setSelectedWorksheet] = useState('');
     const [currentPage, setCurrentPage] = useState(0);
+    const [errorMessage, setErrorMessage] = useState('')
     const itemsPerPage = 25;
 
     const [loading, setLoading] = useState(false); // Handles general loading state
@@ -40,21 +41,28 @@ const HomeScreen = ({ error, files, token, searcheItem,showModal }) => {
                                             data = sheetRows.filter(row => row?.values[0].some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase())));
                                     } catch(error){
                                         console.error(error);
+                                        
                                     }
                                     }else{
                                     setColumns([]);
                                     setWorkSheetData([]);
+                                    setErrorMessage('This file/sheet has no Table. Create one to load rows...')
                                     }
-                                }).catch((err) => console.error("getFileTables", err))
+                                }).catch((err) => {
+                                    console.error("getFileTables", err)
+                                    setErrorMessage(err)
+                                })
                                 return { sheet,  matched: data.length > 0}
                         }
                     ))
                    const returnedWorkSheets = results.filter(result => result.matched).map(result => result.sheet);
                    setWorkSheets(returnedWorkSheets);
-                   handleWorkSheetData(returnedWorkSheets[0],file)
+                   handleWorkSheetData(returnedWorkSheets[0],file);
+                   setErrorMessage('')
                     }else{
                         setWorkSheets(workSheets);
                         handleWorkSheetData(workSheets[0], file)
+                        setErrorMessage('')
                     }
             }
         )
@@ -67,66 +75,37 @@ const HomeScreen = ({ error, files, token, searcheItem,showModal }) => {
 
     // Handle worksheet click and fetch its data
     const handleWorkSheetData = async(workSheet, file) => {
-        
-        // const reader = new FileReader();
-        // const fileResponse = await fetch(file["@microsoft.graph.downloadUrl"]);
-        // const arrayBuffer = await fileResponse.blob();
-        // const workbook = XLSX.read(new Uint8Array(arrayBuffer),{type:'array'});
-        // const sheetName = workbook.SheetNames[0];
-        // const rowss = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-        // console.log(rowss);
-        
-        // const blob =  workSheet?.blob()
-        // console.log(arrayBuffer);
-        
-        // reader.onload = (file) => {
-        //     console.log(file, file.target.result);
-            
-        //     const data = new Uint8Array(file.target.result);
-        //     const workbook = XLSX.read(data,{type:'array'});
-        // const sheetName = workbook.SheetNames[0];
-        // const rowss = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-        // console.log(rowss);
-        //     rowss.map((item) => {
-        //         Object.entries(item).map((value) => console.log(item?.strikeThrough, value))
-        //     })
-
-        // }
-        // reader.readAsArrayBuffer(arrayBuffer);
         setCurrentPage(0);
         setSelectedWorksheet(workSheet?.name); // Set the selected worksheet
         setLoadingWorksheets(true); // Start loading state for fetching worksheet data
         await getFileTables(file?.id, token, workSheet?.id)
         .then(async(table) => {
+            console.log(table);
+                        
             if (table.length > 0) {
                 await getTableColumns(file?.id, token, workSheet?.id, table[0])
-                .then((columns) => setColumns(columns))
+                .then((columns) =>{ 
+                    setColumns(columns);
+                    setErrorMessage('')
+                })
                 .catch((err) => console.error("getColumns",err))
                 await getWorkSheetData(file?.id, workSheet, token, table[0])
-                .then( async(tableRows) => {
-                    // const blob = await tableRows?.blob()
-                //     const dataR = new Uint8Array(tableRows[0].values[0]);
-                //    console.log(dataR);
-                   
-                    
-                //     const workbook = XLSX.read(dataR,{type:'array'});
-                    
-                //     const sheetName = workbook.SheetNames[0];
-                //     const rowss = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-                    
-                //     console.log(rowss);
-                    // console.log(tableRows[0].values[0]);
-                    
+                .then( async(tableRows) => {                    
                     (searcheItem ? 
                     setWorkSheetData(tableRows.filter(row => row?.values[0].some(num => num.toString().toLowerCase().includes(searcheItem.toLowerCase())))) 
                     : setWorkSheetData(tableRows));
+                    setErrorMessage('')
                 })
                 .catch((err) => console.error("getWorkSheetData",err))
             }else{
                 setColumns([]);
-                setWorkSheetData([])
+                setWorkSheetData([]);
+                setErrorMessage('This file/sheet has no Table. Create one to load rows...')
             }
-        }).catch((err) => console.error("getTableError",err))
+        }).catch((err) =>{ 
+            console.error("getTableError",err)
+            setErrorMessage(err)
+        })
         .finally(() => setLoadingWorksheets(false));
     };
 
@@ -187,6 +166,7 @@ const HomeScreen = ({ error, files, token, searcheItem,showModal }) => {
                                 <span>Loading...</span>
                             </div>
                         ) : (
+                            
                             <>
                                 <WorksheetButtons
                                     worksheets={worksheets}
@@ -202,6 +182,7 @@ const HomeScreen = ({ error, files, token, searcheItem,showModal }) => {
                                         <Spinner animation="border" variant="primary" />
                                     </div>
                                 ) : (
+                                    errorMessage ? <h5 style={{color:'red',marginTop:"2%", textAlign:'center'}}>{errorMessage}</h5> :
                                     <WorksheetTable
                                         worksheetData={worksheetData}
                                         selectedWorksheet={selectedWorksheet}
