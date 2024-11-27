@@ -1,6 +1,4 @@
 import axios from "axios";
-//drove id -  b!sEjLbDorlkayHmlSx3RV_ZHK6J5Rk-xGj3X1rIxMz-132kCpdg3AT5GTR9F73t7l - file id -- 01KAEGLNOIK7KTMEUW7VCLFIWWAXKPQALN -- file name -"name": "Commercialization Status EU_UK_10-07-24.xlsb",
-//sheet id - 00000000-0001-0000-0000-000000000000 // sheet name - Europe Cipla MA , 
 const siteId = process.env.REACT_APP_IT_SITE_ID 
 const driveId = process.env.REACT_APP_IT_DRIVE_ID 
 const apiEndPoint = `https://graph.microsoft.com/v1.0/sites/${siteId}/drives/${driveId}`;
@@ -14,10 +12,10 @@ const searchHistoryListApi = `https://graph.microsoft.com/v1.0/sites/${siteId}/l
 
 export const getFiles = async (token) => {
   let mappedResponse = []
-  const url =`${operationsApiEndPoint}/root:/Cipla/Trackers for reference:/children` //
-  // const url = `${apiEndPoint}/root:/Product Lists:/children`
-  // const listVersions =`${apiEndPoint}/items`
-  const listVersions = `${operationsApiEndPoint}/items`;  
+  // const url =`${operationsApiEndPoint}/root:/Cipla/Trackers for reference:/children` //
+  // const listVersions = `${operationsApiEndPoint}/items`; 
+  const url = `${apiEndPoint}/root:/Product Lists:/children`
+  const listVersions =`${apiEndPoint}/items` 
   await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -48,8 +46,8 @@ export const getFiles = async (token) => {
 
 export const getFileWorkSheets = async (fileId,token) => {
  let response = [];
- const url = `${operationsApiEndPoint}/items/${fileId}/workbook/worksheets`
-//  const url = `${apiEndPoint}/items/${fileId}/workbook/worksheets`
+//  const url = `${operationsApiEndPoint}/items/${fileId}/workbook/worksheets`
+ const url = `${apiEndPoint}/items/${fileId}/workbook/worksheets`
  await axios.get(url, {
   headers: {
     Authorization: `Bearer ${token}`,
@@ -62,8 +60,8 @@ return response
 export const getFileTables = async (fileId,token,worksheetId) => {
   //${table.id}/columns
   let response = [];
-  const url = `${operationsApiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables`
-  // const url = `${apiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables`
+  // const url = `${operationsApiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables`
+  const url = `${apiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables`
 
   await axios.get(url, {
    headers: {
@@ -76,8 +74,8 @@ export const getFileTables = async (fileId,token,worksheetId) => {
 
  export const getTableColumns = async (fileId,token,worksheetId,table) => {
   let response = [];
-  const url = `${operationsApiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables/${table.id}/columns`
-  // const url = `${apiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables/${table.id}/columns`
+  // const url = `${operationsApiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables/${table.id}/columns`
+  const url = `${apiEndPoint}/items/${fileId}/workbook/worksheets/${worksheetId}/tables/${table.id}/columns`
   await axios.get(url, {
    headers: {
      Authorization: `Bearer ${token}`,
@@ -89,8 +87,8 @@ export const getFileTables = async (fileId,token,worksheetId) => {
 
 export const getWorkSheetData = async (fileId,workSheet,token,table) => {
   //CH34626
-  const url = `${operationsApiEndPoint}/items/${fileId}/workbook/tables/${table?.name}/rows`
-//  const url = `https://graph.microsoft.com/v1.0/sites/${siteId}/drive/items/${fileId}/workbook/tables/${table?.name}/rows`
+  // const url = `${operationsApiEndPoint}/items/${fileId}/workbook/tables/${table?.name}/rows`
+ const url = `https://graph.microsoft.com/v1.0/sites/${siteId}/drive/items/${fileId}/workbook/tables/${table?.name}/rows`
   // const sheetUrl = `${apiEndPoint}/items/${fileId}/workbook/worksheets('${workSheet.name}')/range(address='A1:D10')`
   let response = [];
   await axios.get(url, {
@@ -103,8 +101,8 @@ export const getWorkSheetData = async (fileId,workSheet,token,table) => {
  }
 
  export const getSearchedFiles = async (token,searchQuery) => {
-  const url =`${operationsApiEndPoint}/items/${trackerForReferenceID}/search(q='${encodeURIComponent(searchQuery)}')`
-  // const url =`${apiEndPoint}/root/children/Product Lists/search(q='${encodeURIComponent(searchQuery)}')`
+  // const url =`${operationsApiEndPoint}/items/${trackerForReferenceID}/search(q='${encodeURIComponent(searchQuery)}')`
+  const url =`${apiEndPoint}/root/children/Product Lists/search(q='${encodeURIComponent(searchQuery)}')`
   const listVersions =`${apiEndPoint}/items`
   let mappedResponse = []
   await axios.get(url,{
