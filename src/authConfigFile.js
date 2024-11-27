@@ -1,9 +1,9 @@
 // src/authConfig.js
 export const msalConfig = {
   auth: {
-    clientId: "5c708616-ab51-4eb9-bbbd-7d31913eccae", 
-    authority: "https://login.microsoftonline.com/46276774-ae30-44c1-bec3-a9b3d9c60fea",
-    redirectUri: "https://jyotigahali.github.io/orcimed-search-app/",// Adjust for production
+    clientId:process.env.REACT_APP_CLIENT_ID, 
+    authority: `https://login.microsoftonline.com/${process.env.REACT_APP_TENANT_ID}`,
+    redirectUri: "http://localhost:3000",// Adjust for production
   },
   cache: {
     cacheLocation: "sessionStorage", // You can change this

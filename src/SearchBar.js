@@ -51,7 +51,6 @@ const SearchBar = ({setSearcheItem, token, setShowModal}) => {
       console.error("Login error: ", err);
     }
   }
-
   return (
     <div className='searchDiv'>
       <img src={Ocmlslogo} alt='ocmlsLogo' />
