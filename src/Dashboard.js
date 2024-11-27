@@ -1,4 +1,3 @@
-// SharePointFiles.js
 import React, { useEffect, useState } from 'react';
 import { PublicClientApplication } from '@azure/msal-browser';
 import { msalConfig } from './authConfigFile';
@@ -58,7 +57,9 @@ const Dashboard = () => {
     useEffect(() => {        
         // Trigger the login process when the component is mounted
         searcheItem || accessToken ? apiCall(accessToken) : login(null)
-    }, [accessToken, searcheItem]);
+       
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [accessToken, searcheItem]); 
 
     return (
         <div>

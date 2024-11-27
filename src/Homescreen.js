@@ -116,6 +116,7 @@ const HomeScreen = ({ error, files, token, searcheItem,showModal }) => {
 
     useEffect(() => {
         handleFileClick(files[0]?.file)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[files])
 
     // Truncate long text and show full on hover

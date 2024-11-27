@@ -41,6 +41,7 @@ const SearchHistoryPopUp = ({token, setShowModalH}) => {
 
     document.addEventListener("click", handleOutsideClick);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[token, showModal, accounts]);
 
   const compareDates = (date) => {
