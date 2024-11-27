@@ -2,6 +2,7 @@
   "name": "cipla-search-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://jyotigahali.github.io/orcimed-search-app/",
   "dependencies": {
     "@azure/msal-browser": "^3.24.0",
     "@azure/msal-react": "^2.1.1",
@@ -26,7 +27,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
