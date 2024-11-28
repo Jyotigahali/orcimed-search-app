@@ -80,8 +80,6 @@ const HomeScreen = ({ error, files, token, searcheItem,showModal }) => {
         setLoadingWorksheets(true); // Start loading state for fetching worksheet data
         await getFileTables(file?.id, token, workSheet?.id)
         .then(async(table) => {
-            console.log(table);
-                        
             if (table.length > 0) {
                 await getTableColumns(file?.id, token, workSheet?.id, table[0])
                 .then((columns) =>{ 
@@ -118,7 +116,32 @@ const HomeScreen = ({ error, files, token, searcheItem,showModal }) => {
         handleFileClick(files[0]?.file)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[files])
-
+    const convertToDateValue =(serial) => {
+        if(typeof  serial === 'number' && serial < 1 && serial > 0){
+            const totalHours = serial * 24; // Convert fraction of the day to hours
+            const hours24 = Math.floor(totalHours); // Get the full hours
+            const minutes = Math.floor((totalHours - hours24) * 60); // Get the minutes
+            const seconds = Math.round((((totalHours - hours24) * 60) - minutes) * 60); // Get the seconds
+        
+            // Determine AM or PM
+            const isPM = hours24 >= 12;
+            let hours12 = hours24 % 12; // Convert to 12-hour format
+            if (hours12 === 0) {
+                hours12 = 12; // Handle 12:00 PM as 12:00, not 0:00
+            }
+        
+            // Format time as HH:MM:SS AM/PM
+            const period = isPM ? "PM" : "AM";
+            return `${hours12}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")} ${period}`;
+        }
+        if(typeof serial === 'number' && serial < 2958465 && serial > 2000){ //	0.83547453703704
+        const excelEpoch = new Date(1899, 11, 30); // Dec 30, 1899
+        const jsDate = new Date(excelEpoch.getTime() + serial * 24 * 60 * 60 * 1000);
+            return jsDate.toLocaleDateString();
+        }else{
+            return serial
+        }
+    }
     // Truncate long text and show full on hover
     const renderCell = (text) => {
         return (
@@ -134,7 +157,7 @@ const HomeScreen = ({ error, files, token, searcheItem,showModal }) => {
                     maxWidth: '150px',
                     cursor: 'pointer'
                 }}>
-                    {text}
+                    {convertToDateValue(text)}
                 </span>
             </OverlayTrigger>
         );

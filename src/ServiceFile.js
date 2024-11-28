@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import axios from "axios";
 const siteId = process.env.REACT_APP_IT_SITE_ID 
 const driveId = process.env.REACT_APP_IT_DRIVE_ID 
@@ -9,7 +10,6 @@ const trackerForReferenceID = process.env.REACT_APP_TRACKER_FOR_REFERENCE_ID
 // const siteUrl = 'https://orcimedlifesciences.sharepoint.com/sites/MedTrackProject';
 const operationsApiEndPoint = `https://graph.microsoft.com/v1.0/sites/${operationsSiteid}/drives/${soDriveId}` // /root:/Cipla/Trackers for reference/children`
 const searchHistoryListApi = `https://graph.microsoft.com/v1.0/sites/${siteId}/lists/${listId}/items`
-console.log(trackerForReferenceID,operationsApiEndPoint);
 
 export const getFiles = async (token) => {
   let mappedResponse = []
